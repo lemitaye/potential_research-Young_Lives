@@ -6,26 +6,37 @@ rm(list = ls())
 
 library(tidyverse)
 library(haven)
-library(janitor)
 
 # Read data 
-child_hh <- read_dta("raw_data/Round_2_2006/etchildlevel12yrold.dta")
+child_hh_r2 <- read_dta("raw_data/Round_2_2006/etchildlevel12yrold.dta")
 
-child_hh <- child_hh %>% 
+child_hh_r2 <- child_hh_r2 %>% 
   select(
-    CHILDID,  # id
-    SEX,      # sex of child
-    TYPESITE, # Urban/Rural
-    REGION,   # Region of residence.
-    EDOMLANG, # most commonly used language in the locality
-    CHLDETH,  # child's ethnic origin
-    CHLNG1ST, # the first language the child learned at home
-    CHSPKLNG, # does child speak the most commonly used language 
-    CHILDLIV, # Where did YL child live when she/he was born?
-    LONGLIV,  # How long has YL child lived here (in years)? 
-    LEFT      # Has the YL child ever left this locality? 
-  ) %>% 
-  clean_names()
+    child_id = CHILDID,  # id
+    sex = SEX,      # sex of child
+    urban = TYPESITE, # Urban/Rural
+    region = REGION,   # Region of residence.
+    lang_local = EDOMLANG, # most commonly used language in the locality
+    ethnic_orig = CHLDETH,  # child's ethnic origin
+    lang_frst = CHLNG1ST, # the first language the child learned at home
+    speak_local = CHSPKLNG, # does child speak the most commonly used language 
+    address_born = CHILDLIV, # Where did YL child live when she/he was born?
+    yrs_lived = LONGLIV,  # How long has YL child lived here (in years)? 
+    left = LEFT      # Has the YL child ever left this locality? 
+  ) 
+
+child_hh_r2 %>% 
+  count(yrs_lived)
+
+child_hh_r2 %>% 
+  count(address_born)
+
+child_hh_r2 %>% 
+  count(region, ethnic_orig)
+
+child_hh_r2 %>% 
+  count(region, lang_local, lang_frst) %>% 
+  print(n = Inf)
 
 
 
