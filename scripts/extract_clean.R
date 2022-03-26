@@ -26,7 +26,7 @@ cons_oc <- cons_all %>%
   filter(is.na(deceased)) %>% # filter non-deceased
   mutate(child_id = str_remove(childid, "ET") %>% as.numeric()) %>% 
   select(
-    child_id, yc:cookingq_new,
+    child_id, everything(),
     -c(deceased, chsmoke, childid)
   ) %>% 
   mutate(
@@ -163,7 +163,25 @@ vars_r3 <- cons_oc %>%
     # Here we collect a lot of covariates:
     child_id, # id
     region_r3 = region, # region of residence
-    hghgrade_r3 = hghgrade # Highest grade achieved at time of interview
+    hghgrade_r3 = hghgrade, # Highest grade achieved at time of interview
+    dadedu, # Father's level of education
+    dadage, # Father's age
+    dadcantread, # Father cannot read
+    momedu, # Mother's level of education
+    momage, # Mother's age
+    momcantread , # Mother cannot read
+    hhsize, # household size
+    wi_new, # Wealth index
+    hq_new, # Housing quality index
+    sv_new, # Access to services index
+    cd_new, # Consumer durables index
+    drwaterq_new, # Access to safe drinking water
+    toiletq_new, # Access to sanitation
+    elecq_new, # Access to electricity
+    cookingq_new, # Access to adequate fuels for cooking
+    aniany, # Household owned any livestock in the past 12 months
+    ownlandhse, #  Household owns land where house is on
+    ownhouse # Household owns the house
   ) 
 
 
@@ -184,7 +202,13 @@ vars_r1 <- cons_oc %>%
   select(
     child_id, # id
     region_r1 = region, # region of residence
-    hghgrade_r1 = hghgrade # Highest grade achieved at time of interview
+    hghgrade_r1 = hghgrade, # Highest grade achieved at time of interview
+    zwfa, # Weight-for-age z-score
+    zhfa, # Height-for-age z-score
+    zbfa, # BMI-for-age z-score
+    underweight, # Low weight for age
+    stunting, # Short height for age
+    thinness # Low BMI for age
   ) 
 
 # Construction of variables ####
