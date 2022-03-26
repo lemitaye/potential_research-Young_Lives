@@ -90,27 +90,10 @@ activity_r5 <- occh_activity %>%
   select(
     child_id = CHILDCODE, # id
     no_activ = ACTIDR5,   # No. of Paid Activities
-    type_activ = ACTR5,     # Type of activity_r5
-    owner_activ = ACTOWNR5,  # Who do you do this activity_r5 for?
-    pay_form = PYMRECR5,     # form of payment 
-    in_cash = ERNCSHR5,      # In cash (value in Birr)
-    in_kind_value = ERNKNDR5, # In kind (cash equivalent) (value in Birr)
-    pay_period = HWPAIDR5  # What period of time did this payment cover?
+    type_activ = ACTR5     # Type of activity_r5
   ) %>% 
   # Filter the main activity (child-activity combination)
-  filter(no_activ ==  1) %>% 
-  mutate(
-    wage_employ = case_when(
-      # The following get 1:
-      #    5: Wage Employment (Agriculture)
-      #   12: Wage Employment (Unsalaried; Non-agriculture)
-      #   13: Regular Salaried Employment
-      type_activ %in% c(5, 12, 13) ~ 1,
-      
-      # Otherwise, 0
-      TRUE ~ 0
-    )
-  )
+  filter(no_activ ==  1) 
 
 
 # Variables from round 5
@@ -178,14 +161,34 @@ joined <- time_invar %>%
   left_join(language_primary, by = "child_id") %>% 
   left_join(vars_r3, by = "child_id") %>% 
   left_join(vars_r5, by = "child_id") %>% 
-  left_join(activity_r5, by = "child_id")
+  left_join(activity_r5, by = "child_id") 
 
-# Being active is highly correlated with reporting activity ("type_activ)
+joined <- joined %>% 
+  mutate(
+    
+    active = case_when(
+      hwork_r5 == 0 ~ 0, 
+      hwork_r5 > 0 ~ 1
+    ),
+    
+    wage_employ = case_when(
+      # The following get 1:
+      #    5: Wage Employment (Agriculture)
+      #   12: Wage Employment (Unsalaried; Non-agriculture)
+      #   13: Regular Salaried Employment
+      type_activ %in% c(5, 12, 13) ~ 1,
+      
+      # If both "type_activ" and "active" are, they get NA.
+      is.na(type_activ) & is.na(active) ~ NA_real_,
+      
+      # Otherwise, 0.
+      TRUE ~ 0
+    )
+  )
+
+# Being active is highly correlated with reporting activity ("type_activ")
 joined %>% 
-  mutate(active = case_when(
-    hwork_r5 == 0 ~ 0, 
-    hwork_r5 > 0 ~ 1
-  )) %>% 
+  mutate() %>% 
   count(active, type_activ) %>% 
   print(n = Inf)
 
