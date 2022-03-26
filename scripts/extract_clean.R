@@ -28,6 +28,17 @@ cons_oc <- cons_all %>%
   select(
     child_id, yc:cookingq_new,
     -c(deceased, chsmoke, childid)
+  ) %>% 
+  mutate(
+    region = case_when(
+      region ==  1 ~ "Tigray",
+      region ==  2 ~ "Afar",
+      region ==  3 ~ "Amhara",
+      region ==  4 ~ "Oromia",
+      region ==  5 ~ "Somali",
+      region ==  7 ~ "SNNP",
+      region ==  14 ~ "Addis Ababa"
+    ) %>% factor()
   )
 
 test_r4 <- cognitive_r4 %>% 
@@ -83,7 +94,33 @@ time_invar <- cons_oc %>%
     chldrel, # religion
     preprim, # attended pre-primary school
     agegr1 # age at start of grade 1
-    ) 
+    ) %>% 
+  mutate(
+    chlang = case_when(
+      chlang == 1 ~  "Afar",
+      chlang == 2 ~  "Amharic",
+      chlang == 6 ~  "Gurage",
+      chlang == 7 ~  "Hadiya",
+      chlang == 11 ~ "Afaan Oromo",
+      chlang == 12 ~ "Sidamigna",
+      chlang == 13 ~ "Siltigna",
+      chlang == 15 ~ "Tigrigna",
+      chlang == 16 ~ "Wolayta",
+      chlang == 20 ~ "Other",
+      chlang == NA ~ NA_character_
+    ) %>% factor(),
+    
+    chethnic = case_when(
+      chethnic == 10 ~ "Other",
+      chethnic == 12 ~ "Amhara",
+      chethnic == 13 ~ "Gurage",
+      chethnic == 14 ~ "Hadiya",
+      chethnic == 16 ~ "Oromo",
+      chethnic == 17 ~ "Sidama",
+      chethnic == 18 ~ "Tigrian",
+      chethnic == 19 ~ "Wolayta"
+    ) %>% factor()
+  )
 
 
 activity_r5 <- occh_activity %>% 
@@ -120,11 +157,10 @@ vars_r4 <- cons_oc %>%
 
 # Variables from round 3
 
-# Here we collect a lot of covariates:
-
 vars_r3 <- cons_oc %>% 
   filter(round == 3) %>% 
   select(
+    # Here we collect a lot of covariates:
     child_id, # id
     region_r3 = region, # region of residence
     hghgrade_r3 = hghgrade # Highest grade achieved at time of interview
@@ -139,6 +175,16 @@ vars_r2 <- cons_oc %>%
     child_id, # id
     region_r2 = region, # region of residence
     hghgrade_r2 = hghgrade # Highest grade achieved at time of interview
+  ) 
+
+# Variables from round 1
+
+vars_r1 <- cons_oc %>% 
+  filter(round == 1) %>% 
+  select(
+    child_id, # id
+    region_r1 = region, # region of residence
+    hghgrade_r1 = hghgrade # Highest grade achieved at time of interview
   ) 
 
 # Construction of variables ####
@@ -169,13 +215,25 @@ language_primary <- vars_r4 %>%
 
 joined <- time_invar %>% 
   left_join(language_primary, by = "child_id") %>% 
+  left_join(vars_r1, by = "child_id") %>% 
   left_join(vars_r2, by = "child_id") %>% 
   left_join(vars_r3, by = "child_id") %>% 
   left_join(vars_r4, by = "child_id") %>% 
   left_join(vars_r5, by = "child_id") %>% 
   left_join(activity_r5, by = "child_id") 
 
+# Function to generate intensity of treatment variable:
+
+top_code <- function(var, ceil) {
+  
+  out <- if_else( var > ceil, ceil, var )
+  
+  return(out)
+}
+
+
 joined <- joined %>% 
+  # Generate main outcome variable and instruments
   mutate(
     
     active = case_when(
@@ -195,20 +253,98 @@ joined <- joined %>%
       
       # Otherwise, 0.
       TRUE ~ 0
+    ),
+    
+    hghgrade = case_when(
+      
+      !is.na(hghgrade_r5) ~ hghgrade_r5,
+      
+      is.na(hghgrade_r5) & !is.na(hghgrade_r4) ~ hghgrade_r4,
+      
+      is.na(hghgrade_r5) & is.na(hghgrade_r4) & 
+        !is.na(hghgrade_r3) ~ hghgrade_r3,
+      
+      is.na(hghgrade_r5) & is.na(hghgrade_r4) & 
+        is.na(hghgrade_r3) & !is.na(hghgrade_r2) ~ hghgrade_r2,
+      
+      is.na(hghgrade_r5) & is.na(hghgrade_r4) & 
+        is.na(hghgrade_r3) & is.na(hghgrade_r2) ~ hghgrade_r1
+      
+    ),
+    
+    hghgrade_num = case_when(
+      hghgrade <= 14 ~ as.numeric(hghgrade),
+      # Recode "Religious education" and "Other" to 0
+      hghgrade %in% c(29, 30) ~ 0
+    ),
+
+    IMTI = case_when(
+
+      region_r3 == "Tigray" & chlang == "Tigrigna" & lang_primary == "Tigrigna"
+      ~ top_code(hghgrade_num, 8),
+
+      region_r3 == "Oromia" & chlang == "Afaan Oromo" & lang_primary == "Afaan Oromo"
+      ~ top_code(hghgrade_num, 8),
+
+      region_r3 == "Oromia" & chlang == "Amaharic" & lang_primary == "Amharic"
+      ~ top_code(hghgrade_num, 8),
+
+      region_r3 == "Amhara" & chlang == "Amharic" & lang_primary == "Amharic"
+      ~ top_code(hghgrade_num, 6),
+
+      region_r3 == "Amhara" & chlang == "Afaan Oromo" & lang_primary == "Afaan Oromo"
+      ~ top_code(hghgrade_num, 8),
+
+      region_r3 == "SNNP" & chlang == "Sidamigna" & lang_primary == "Sidamigna"
+      ~ top_code(hghgrade_num, 4),
+
+      region_r3 == "SNNP" & chlang == "Wolayta" & lang_primary == "Wolayta"
+      ~ top_code(hghgrade_num, 4),
+
+      region_r3 == "SNNP" & chlang == "Hadiya" & lang_primary == "Hadiya"
+      ~ top_code(hghgrade_num, 4),
+
+      region_r3 == "SNNP" & chlang == "Amharic" & lang_primary == "Amharic"
+      ~ top_code(hghgrade_num, 4),
+
+      region_r3 == "Addis Ababa" & chlang == "Amharic" & lang_primary == "Amharic"
+      ~ top_code(hghgrade_num, 6),
+
+      TRUE ~ 0
+    ),
+    
+    # omit child language "other" 
+    # region_r3 == "SNNP" & chlang == "Afaan Oromo" & lang_primary == "Afaan Oromo" 
+    # ~ top_code(hghgrade_num, 4), ?
+    
+    E_is = case_when(
+      
+      region_r3 == "Oromia" & chethnic == "Oromo" ~ 1,
+      
+      region_r3 == "Tigray" & chethnic == "Tigrian" ~ 1,
+      
+      region_r3 == "Oromia" & chethnic == "Amhara" & lang_primary == "Amharic" ~ 1,
+      
+      region_r3 == "Amhara" & chethnic == "Oromo" & lang_primary == "Afaan Oromo" ~ 1,
+      
+      region_r3 == "Amhara" & chethnic == "Amhara" ~ 0.75,
+      
+      region_r3 == "SNNP" & chethnic == "Hadiya" & lang_primary == "Hadiya" ~ 0.5,
+      
+      region_r3 == "SNNP" & chethnic == "Sidama" & lang_primary == "Sidamigna" ~ 0.5,
+      
+      region_r3 == "SNNP" & chethnic == "Wolayta" & lang_primary == "Wolayta" ~ 0.5,
+      
+      region_r3 == "SNNP" & chethnic == "Amhara" & lang_primary == "Amharic" ~ 0.5,
+      
+      TRUE ~ 0
     )
+    
   )
 
-joined %>% glimpse()
-
-joined %>% 
-  filter(!is.na(region_r2)) %>% 
-  group_by(region_r2) %>% 
-  summarise(perc_wage = mean(wage_employ, na.rm = TRUE)) %>% 
-  ggplot(aes(factor(region_r2) %>% fct_reorder(perc_wage), perc_wage)) +
-  geom_col() +
-  scale_y_continuous(labels = percent)
-
-
+# Next steps:
+#  Add some covariates from round 3
+#  Start some preliminary analysis
 
 
 
