@@ -131,6 +131,16 @@ vars_r3 <- cons_oc %>%
   ) 
 
 
+# Variables from round 2
+
+vars_r2 <- cons_oc %>% 
+  filter(round == 2) %>% 
+  select(
+    child_id, # id
+    region_r2 = region, # region of residence
+    hghgrade_r2 = hghgrade # Highest grade achieved at time of interview
+  ) 
+
 # Construction of variables ####
 
 # Construct the (local) language of instruction in primary schools
@@ -159,7 +169,9 @@ language_primary <- vars_r4 %>%
 
 joined <- time_invar %>% 
   left_join(language_primary, by = "child_id") %>% 
+  left_join(vars_r2, by = "child_id") %>% 
   left_join(vars_r3, by = "child_id") %>% 
+  left_join(vars_r4, by = "child_id") %>% 
   left_join(vars_r5, by = "child_id") %>% 
   left_join(activity_r5, by = "child_id") 
 
@@ -178,7 +190,7 @@ joined <- joined %>%
       #   13: Regular Salaried Employment
       type_activ %in% c(5, 12, 13) ~ 1,
       
-      # If both "type_activ" and "active" are, they get NA.
+      # If both "type_activ" and "active" are missing, they get NA.
       is.na(type_activ) & is.na(active) ~ NA_real_,
       
       # Otherwise, 0.
@@ -186,13 +198,15 @@ joined <- joined %>%
     )
   )
 
-# Being active is highly correlated with reporting activity ("type_activ")
+joined %>% glimpse()
+
 joined %>% 
-  mutate() %>% 
-  count(active, type_activ) %>% 
-  print(n = Inf)
-
-
+  filter(!is.na(region_r2)) %>% 
+  group_by(region_r2) %>% 
+  summarise(perc_wage = mean(wage_employ, na.rm = TRUE)) %>% 
+  ggplot(aes(factor(region_r2) %>% fct_reorder(perc_wage), perc_wage)) +
+  geom_col() +
+  scale_y_continuous(labels = percent)
 
 
 
