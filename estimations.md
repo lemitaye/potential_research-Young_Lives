@@ -87,3 +87,35 @@ stargazer(smod_ols, smod_iv, type = "text")
     ## F Statistic                    5.013** (df = 1; 811)             
     ## =================================================================
     ## Note:                                 *p<0.1; **p<0.05; ***p<0.01
+
+The same regressions as above, but excluding the Addis Ababa sample:
+
+``` r
+smod_ols_noaa <- lm(wage_employ ~ IMTI, data = joined, subset = region_r3 != "Addis Ababa")
+smod_iv_noaa <- ivreg(wage_employ ~ IMTI | E_is, data = joined, subset = region_r3 != "Addis Ababa")
+stargazer(smod_ols_noaa, smod_iv_noaa, type = "text")
+```
+
+    ## 
+    ## =================================================================
+    ##                                       Dependent variable:        
+    ##                                ----------------------------------
+    ##                                           wage_employ            
+    ##                                         OLS          instrumental
+    ##                                                        variable  
+    ##                                         (1)              (2)     
+    ## -----------------------------------------------------------------
+    ## IMTI                                  0.012**          0.022**   
+    ##                                       (0.006)          (0.010)   
+    ##                                                                  
+    ## Constant                             0.177***          0.127**   
+    ##                                       (0.034)          (0.054)   
+    ##                                                                  
+    ## -----------------------------------------------------------------
+    ## Observations                            699              699     
+    ## R2                                     0.006            0.002    
+    ## Adjusted R2                            0.005            0.001    
+    ## Residual Std. Error (df = 697)         0.426            0.427    
+    ## F Statistic                    4.241** (df = 1; 697)             
+    ## =================================================================
+    ## Note:                                 *p<0.1; **p<0.05; ***p<0.01

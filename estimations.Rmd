@@ -3,6 +3,8 @@ title: "Preliminary Estimations"
 author: "Lemi Daba"
 date: "4/7/2022"
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -40,9 +42,32 @@ stargazer(sfrst, type = "text")
 
 2SLS on the whole sample:
 
-```{r}
+```{r chunk_2}
 smod_ols <- lm(wage_employ ~ IMTI, data = joined)
 smod_iv <- ivreg(wage_employ ~ IMTI | E_is, data = joined)
 stargazer(smod_ols, smod_iv, type = "text")
 ```
+
+The same regressions as above, but excluding the Addis Ababa sample:
+
+```{r chunk_3}
+smod_ols_noaa <- lm(wage_employ ~ IMTI, data = joined, subset = region_r3 != "Addis Ababa")
+smod_iv_noaa <- ivreg(wage_employ ~ IMTI | E_is, data = joined, subset = region_r3 != "Addis Ababa")
+stargazer(smod_ols_noaa, smod_iv_noaa, type = "text")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
