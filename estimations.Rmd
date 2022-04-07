@@ -1,0 +1,48 @@
+---
+title: "Preliminary Estimations"
+author: "Lemi Daba"
+date: "4/7/2022"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Preliminaries:
+```{r message=FALSE, warning=FALSE}
+rm(list = ls())
+
+# packages
+library(tidyverse)
+library(haven)
+library(scales)
+library(stargazer)
+library(AER)
+
+theme_set(theme_light())
+```
+
+
+Need to run data cleaning first
+```{r raw_data, cache=TRUE}
+source("scripts/extract_clean.R")
+```
+
+## OLS and IV on all sample
+
+Start by estimating a simple model for both OLS and IV
+
+First stage regression (no covariates): 
+```{r chunk_1}
+sfrst <- lm(IMTI ~ E_is, data = joined)
+stargazer(sfrst, type = "text")
+```
+
+2SLS on the whole sample:
+
+```{r}
+smod_ols <- lm(wage_employ ~ IMTI, data = joined)
+smod_iv <- ivreg(wage_employ ~ IMTI | E_is, data = joined)
+stargazer(smod_ols, smod_iv, type = "text")
+```
+
