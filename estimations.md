@@ -147,3 +147,43 @@ stargazer(smod_ols_noaa, smod_iv_noaa, type = "text")
     ## F Statistic                    4.241** (df = 1; 697)             
     ## =================================================================
     ## Note:                                 *p<0.1; **p<0.05; ***p<0.01
+
+``` r
+aa_sample <- joined %>% 
+  filter(region_r3 == "Addis Ababa") %>% 
+  mutate(
+    ethnic_D = if_else(chethnic == "Amhara", 0.75, 0),
+    IMIT = if_else(chethnic == "Amhara",6, 0)
+    )
+
+ols_aa <- lm(wage_employ ~ ethnic_D, data = aa_sample)
+iv_aa <- ivreg(wage_employ ~ IMTI | ethnic_D, data = aa_sample)
+stargazer(ols_aa, iv_aa, type = "text")
+```
+
+    ## 
+    ## ================================================================
+    ##                                       Dependent variable:       
+    ##                                ---------------------------------
+    ##                                           wage_employ           
+    ##                                        OLS          instrumental
+    ##                                                       variable  
+    ##                                        (1)              (2)     
+    ## ----------------------------------------------------------------
+    ## ethnic_D                             -0.223*                    
+    ##                                      (0.132)                    
+    ##                                                                 
+    ## IMTI                                                   -0.185   
+    ##                                                       (0.136)   
+    ##                                                                 
+    ## Constant                             0.577***         1.523**   
+    ##                                      (0.059)          (0.739)   
+    ##                                                                 
+    ## ----------------------------------------------------------------
+    ## Observations                           110              110     
+    ## R2                                    0.026            -0.487   
+    ## Adjusted R2                           0.017            -0.500   
+    ## Residual Std. Error (df = 108)        0.498            0.615    
+    ## F Statistic                    2.840* (df = 1; 108)             
+    ## ================================================================
+    ## Note:                                *p<0.1; **p<0.05; ***p<0.01
