@@ -51,8 +51,12 @@ stargazer(smod_ols, smod_iv, type = "text")
 The same regressions as above, but excluding the Addis Ababa sample:
 
 ```{r chunk_3}
+sfrst_noaa <- lm(IMTI ~ E_is, data = joined, subset = region_r3 != "Addis Ababa")
+
 smod_ols_noaa <- lm(wage_employ ~ IMTI, data = joined, subset = region_r3 != "Addis Ababa")
 smod_iv_noaa <- ivreg(wage_employ ~ IMTI | E_is, data = joined, subset = region_r3 != "Addis Ababa")
+
+stargazer(sfrst_noaa, type = "text")
 stargazer(smod_ols_noaa, smod_iv_noaa, type = "text")
 ```
 
