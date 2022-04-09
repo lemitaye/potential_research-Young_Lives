@@ -12,8 +12,6 @@
 rm(list = ls())
 
 # packages
-rm(list = ls())
-
 library(tidyverse)
 library(haven)
 library(scales)
