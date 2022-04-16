@@ -164,12 +164,16 @@ vars_r3 <- cons_oc %>%
     child_id, # id
     region_r3 = region, # region of residence
     hghgrade_r3 = hghgrade, # Highest grade achieved at time of interview
-    dadedu, # Father's level of education
-    dadage, # Father's age
-    dadcantread, # Father cannot read
-    momedu, # Mother's level of education
-    momage, # Mother's age
-    momcantread , # Mother cannot read
+    typesite_r3 = typesite, # Area of residence (urban/rural)
+    # dadedu_r3 = dadedu, # Father's level of education
+    # dadcantread_r3 = dadcantread, # Father cannot read
+    # momedu_r3 = momedu, # Mother's level of education
+    # momcantread_r3 = momcantread, # Mother cannot read
+    # caredu_r3 = caredu, # Caregiver's level of education
+    # careage_r3 = careage, # Caregiver's age
+    # caresex_r3 = caresex, # Caregiver's sex
+    # carerel_r3 = carerel, # Caregiver's relationship to YL child
+    # carecantread_r3 = carecantread, # Caregiver cannot read
     hhsize, # household size
     wi_new, # Wealth index
     hq_new, # Housing quality index
@@ -180,7 +184,7 @@ vars_r3 <- cons_oc %>%
     elecq_new, # Access to electricity
     cookingq_new, # Access to adequate fuels for cooking
     aniany, # Household owned any livestock in the past 12 months
-    ownlandhse, #  Household owns land where house is on
+    # ownlandhse_r3 = ownlandhse, #  Household owns land where house is on
     ownhouse # Household owns the house
   ) 
 
@@ -192,7 +196,20 @@ vars_r2 <- cons_oc %>%
   select(
     child_id, # id
     region_r2 = region, # region of residence
-    hghgrade_r2 = hghgrade # Highest grade achieved at time of interview
+    # typesite_r2 = typesite, # Area of residence (urban/rural)
+    hghgrade_r2 = hghgrade, # Highest grade achieved at time of interview
+    # dadedu_r2 = dadedu, # Father's level of education
+    # dadcantread_r2 = dadcantread, # Father cannot read
+    # dadyrdied_r2 = dadyrdied, # Year when father has died
+    # momedu_r2 = momedu, # Mother's level of education
+    # momcantread_r2 = momcantread, # Mother cannot read
+    # momyrdied_r2 = momyrdied, # Year when mother has died
+    # caredu_r2 = caredu, # Caregiver's level of education
+    # careage_r2 = careage, # Caregiver's age
+    # caresex_r2 = caresex, # Caregiver's sex
+    # carerel_r2 = carerel, # Caregiver's relationship to YL child
+    # carecantread_r2 = carecantread, # Caregiver cannot read
+    # ownlandhse_r2 = ownlandhse #  Household owns land where house is on
   ) 
 
 # Variables from round 1
@@ -202,13 +219,26 @@ vars_r1 <- cons_oc %>%
   select(
     child_id, # id
     region_r1 = region, # region of residence
+    typesite_r1 = typesite, # Area of residence (urban/rural)
     hghgrade_r1 = hghgrade, # Highest grade achieved at time of interview
     zwfa, # Weight-for-age z-score
     zhfa, # Height-for-age z-score
     zbfa, # BMI-for-age z-score
     underweight, # Low weight for age
     stunting, # Short height for age
-    thinness # Low BMI for age
+    thinness, # Low BMI for age
+    # dadedu_r1 = dadedu, # Father's level of education
+    # dadcantread_r1 = dadcantread, # Father cannot read
+    # dadyrdied_r1 = dadyrdied, # Year when father has died
+    # momedu_r1 = momedu, # Mother's level of education
+    # momcantread_r1 = momcantread, # Mother cannot read
+    # momyrdied_r1 = momyrdied, # Year when mother has died
+    caredu_r1 = caredu, # Caregiver's level of education
+    careage_r1 = careage, # Caregiver's age
+    caresex_r1 = caresex, # Caregiver's sex
+    carerel_r1 = carerel, # Caregiver's relationship to YL child
+    carecantread_r1 = carecantread, # Caregiver cannot read
+    ownlandhse_r1 = ownlandhse #  Household owns land where house is on
   ) 
 
 # Construction of variables ####
@@ -231,8 +261,8 @@ language_primary <- vars_r4 %>%
         # a proxy
         TRUE ~ lang_math_test
       ) %>% factor()
-  ) %>% 
-  select(child_id, lang_primary)
+  ) %>% select(-hghgrade_r4) 
+  # select(child_id, lang_primary)
 
 
 # join with region in round 3 and time invariant variables
@@ -245,6 +275,58 @@ joined <- time_invar %>%
   left_join(vars_r4, by = "child_id") %>% 
   left_join(vars_r5, by = "child_id") %>% 
   left_join(activity_r5, by = "child_id") 
+
+# Generate a single "region" and "highest leve of education" variables
+joined <- joined %>% 
+  mutate(
+    region = case_when(
+      
+      !is.na(region_r3) ~ region_r3,
+      
+      is.na(region_r3) & !is.na(region_r2) ~ region_r2,
+      
+      is.na(region_r3) & is.na(region_r2) ~ region_r1, # there are no missing values for "region_r1"
+    ),
+    
+    hghgrade_r4 = case_when(
+      
+      !is.na(hghgrade_r4) ~ hghgrade_r4,
+      
+      is.na(hghgrade_r4) & is.na(hghgrade_r3) ~ hghgrade_r3,
+      
+      is.na(hghgrade_r4) & is.na(hghgrade_r3) & 
+        !is.na(hghgrade_r2) ~ hghgrade_r2,
+      
+      is.na(hghgrade_r4) & is.na(hghgrade_r3) & 
+        is.na(hghgrade_r2) ~ hghgrade_r1
+      
+    ),
+    
+    hghgrade_final = case_when(
+      
+      !is.na(hghgrade_r5) ~ hghgrade_r5,
+      
+      is.na(hghgrade_r5) ~ hghgrade_r4
+    ),
+    
+    hghgrade_r4_num = case_when(
+      hghgrade_r4 <= 14 ~ as.numeric(hghgrade_r4),
+      # Recode "Religious education" and "Other" to 0
+      hghgrade_r4 %in% c(29, 30) ~ 0
+    ),
+    
+    hghgrade_final_num = case_when(
+      hghgrade_final <= 14 ~ as.numeric(hghgrade_final),
+      # Recode "Religious education" and "Other" to 0
+      hghgrade_final %in% c(29, 30) ~ 0
+    ),
+    
+    care_educ_num = case_when(
+      caredu_r1 <= 14 ~ as.numeric(caredu_r1),
+      # Recode "Adult literacy" and "Religious education" to 0
+      caredu_r1 %in% c(28, 29) ~ 0
+    )
+  )
 
 # Function to generate intensity of treatment variable:
 
@@ -279,97 +361,106 @@ joined <- joined %>%
       TRUE ~ 0
     ),
     
-    hghgrade = case_when(
-      
-      !is.na(hghgrade_r5) ~ hghgrade_r5,
-      
-      is.na(hghgrade_r5) & !is.na(hghgrade_r4) ~ hghgrade_r4,
-      
-      is.na(hghgrade_r5) & is.na(hghgrade_r4) & 
-        !is.na(hghgrade_r3) ~ hghgrade_r3,
-      
-      is.na(hghgrade_r5) & is.na(hghgrade_r4) & 
-        is.na(hghgrade_r3) & !is.na(hghgrade_r2) ~ hghgrade_r2,
-      
-      is.na(hghgrade_r5) & is.na(hghgrade_r4) & 
-        is.na(hghgrade_r3) & is.na(hghgrade_r2) ~ hghgrade_r1
-      
-    ),
+    chsex = case_when(
+        chsex == 1 ~ "Male", chsex == 2 ~ "Female"
+        ) %>% factor(), 
     
-    hghgrade_num = case_when(
-      hghgrade <= 14 ~ as.numeric(hghgrade),
-      # Recode "Religious education" and "Other" to 0
-      hghgrade %in% c(29, 30) ~ 0
-    ),
-
     IMTI = case_when(
 
-      region_r3 == "Tigray" & chlang == "Tigrigna" & lang_primary == "Tigrigna"
-      ~ top_code(hghgrade_num, 8),
+      region == "Tigray" & chlang == "Tigrigna" & lang_primary == "Tigrigna"
+      ~ top_code(hghgrade_final_num, 8),
 
-      region_r3 == "Oromia" & chlang == "Afaan Oromo" & lang_primary == "Afaan Oromo"
-      ~ top_code(hghgrade_num, 8),
+      region == "Oromia" & chlang == "Afaan Oromo" & lang_primary == "Afaan Oromo"
+      ~ top_code(hghgrade_final_num, 8),
 
-      region_r3 == "Oromia" & chlang == "Amaharic" & lang_primary == "Amharic"
-      ~ top_code(hghgrade_num, 8),
+      region == "Oromia" & chlang == "Amaharic" & lang_primary == "Amharic"
+      ~ top_code(hghgrade_final_num, 8),
 
-      region_r3 == "Amhara" & chlang == "Amharic" & lang_primary == "Amharic"
-      ~ top_code(hghgrade_num, 6),
+      region == "Amhara" & chlang == "Amharic" & lang_primary == "Amharic"
+      ~ top_code(hghgrade_final_num, 6),
 
-      region_r3 == "Amhara" & chlang == "Afaan Oromo" & lang_primary == "Afaan Oromo"
-      ~ top_code(hghgrade_num, 8),
+      region == "Amhara" & chlang == "Afaan Oromo" & lang_primary == "Afaan Oromo"
+      ~ top_code(hghgrade_final_num, 8),
 
-      region_r3 == "SNNP" & chlang == "Sidamigna" & lang_primary == "Sidamigna"
-      ~ top_code(hghgrade_num, 4),
+      region == "SNNP" & chlang == "Sidamigna" & lang_primary == "Sidamigna"
+      ~ top_code(hghgrade_final_num, 4),
 
-      region_r3 == "SNNP" & chlang == "Wolayta" & lang_primary == "Wolayta"
-      ~ top_code(hghgrade_num, 4),
+      region == "SNNP" & chlang == "Wolayta" & lang_primary == "Wolayta"
+      ~ top_code(hghgrade_final_num, 4),
 
-      region_r3 == "SNNP" & chlang == "Hadiya" & lang_primary == "Hadiya"
-      ~ top_code(hghgrade_num, 4),
+      region == "SNNP" & chlang == "Hadiya" & lang_primary == "Hadiya"
+      ~ top_code(hghgrade_final_num, 4),
 
-      region_r3 == "SNNP" & chlang == "Amharic" & lang_primary == "Amharic"
-      ~ top_code(hghgrade_num, 4),
+      region == "SNNP" & chlang == "Amharic" & lang_primary == "Amharic"
+      ~ top_code(hghgrade_final_num, 4),
 
-      region_r3 == "Addis Ababa" & chlang == "Amharic" & lang_primary == "Amharic"
-      ~ top_code(hghgrade_num, 6),
+      region == "Addis Ababa" & chlang == "Amharic" & lang_primary == "Amharic"
+      ~ top_code(hghgrade_final_num, 6),
 
       TRUE ~ 0
     ),
     
     # omit child language "other" 
-    # region_r3 == "SNNP" & chlang == "Afaan Oromo" & lang_primary == "Afaan Oromo" 
-    # ~ top_code(hghgrade_num, 4), ?
+    # region == "SNNP" & chlang == "Afaan Oromo" & lang_primary == "Afaan Oromo" 
+    # ~ top_code(hghgrade_final_num, 4), ?
     
     E_is = case_when(
       
-      region_r3 == "Oromia" & chethnic == "Oromo" ~ 1,
+      region == "Oromia" & chethnic == "Oromo" ~ 1,
       
-      region_r3 == "Tigray" & chethnic == "Tigrian" ~ 1,
+      region == "Tigray" & chethnic == "Tigrian" ~ 1,
       
-      region_r3 == "Oromia" & chethnic == "Amhara" & lang_primary == "Amharic" ~ 1,
+      region == "Oromia" & chethnic == "Amhara" & lang_primary == "Amharic" ~ 1,
       
-      region_r3 == "Amhara" & chethnic == "Oromo" & lang_primary == "Afaan Oromo" ~ 1,
+      region == "Amhara" & chethnic == "Oromo" & lang_primary == "Afaan Oromo" ~ 1,
       
-      region_r3 == "Amhara" & chethnic == "Amhara" ~ 0.75,
+      region == "Amhara" & chethnic == "Amhara" ~ 0.75,
       
-      region_r3 == "SNNP" & chethnic == "Hadiya" & lang_primary == "Hadiya" ~ 0.5,
+      region == "SNNP" & chethnic == "Hadiya" & lang_primary == "Hadiya" ~ 0.5,
       
-      region_r3 == "SNNP" & chethnic == "Sidama" & lang_primary == "Sidamigna" ~ 0.5,
+      region == "SNNP" & chethnic == "Sidama" & lang_primary == "Sidamigna" ~ 0.5,
       
-      region_r3 == "SNNP" & chethnic == "Wolayta" & lang_primary == "Wolayta" ~ 0.5,
+      region == "SNNP" & chethnic == "Wolayta" & lang_primary == "Wolayta" ~ 0.5,
       
-      region_r3 == "SNNP" & chethnic == "Amhara" & lang_primary == "Amharic" ~ 0.5,
+      region == "SNNP" & chethnic == "Amhara" & lang_primary == "Amharic" ~ 0.5,
+      
+      region == "Addis Ababa" & chethnic == "Amhara" ~ 0.75,
       
       TRUE ~ 0
     )
     
   )
 
-# Next steps:
-#  Add some covariates from round 3
-#  Start some preliminary analysis
+# remove unnecessary columns:
+joined <- joined %>% 
+  select(-starts_with(c("region_r", "hghgrade_r"))) 
 
+# Split the sample to two (AA and Non-AA):
+aa_samp <- joined %>% 
+  filter(region ==  "Addis Ababa")
+
+non_aa_samp <- joined %>% 
+  filter(region !=  "Addis Ababa")
+
+
+
+
+
+
+
+# 
+# 
+# 
+# # count missing values for all variables
+# joined %>% 
+#   summarise_all( ~sum(is.na(.)) )
+# 
+# # missing value for parents' education is not explained by death of parents
+# 
+# # migration over time is very small as the following shows:
+# joined %>% 
+#   count(region_r1, region_r2, region, region_r4, region_r5, sort = TRUE) %>% 
+#   print(n = 30)
 
 
 
