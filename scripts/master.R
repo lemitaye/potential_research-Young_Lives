@@ -17,6 +17,7 @@ library(haven)
 library(scales)
 library(stargazer)
 library(AER)
+library(lfe)
 
 theme_set(theme_light())
 
