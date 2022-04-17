@@ -288,7 +288,7 @@ joined <- joined %>%
       is.na(region_r3) & is.na(region_r2) ~ region_r1, # there are no missing values for "region_r1"
     ),
     
-    hghgrade_r4 = case_when(
+    hghgrade_4 = case_when(
       
       !is.na(hghgrade_r4) ~ hghgrade_r4,
       
@@ -309,7 +309,7 @@ joined <- joined %>%
       is.na(hghgrade_r5) ~ hghgrade_r4
     ),
     
-    hghgrade_r4_num = case_when(
+    hghgrade_4_num = case_when(
       hghgrade_r4 <= 14 ~ as.numeric(hghgrade_r4),
       # Recode "Religious education" and "Other" to 0
       hghgrade_r4 %in% c(29, 30) ~ 0

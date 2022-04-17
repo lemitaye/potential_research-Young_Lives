@@ -75,9 +75,26 @@ iv_aa <- ivreg(wage_employ ~ IMTI | ethnic_D, data = aa_sample)
 stargazer(ols_aa, iv_aa, type = "text")
 ```
 
+```{r chunk_3}
+
+smod_iv_test__noaa <- ivreg(perco_maths ~ IMTI | E_is, data = joined, subset = region != "Addis Ababa")
+
+smod_iv_test_noaa <- ivreg(perco_lang ~ IMTI | E_is, data = joined, subset = region != "Addis Ababa")
 
 
+stargazer(smod_iv_test__noaa, smod_iv_test_noaa, type = "text")
+```
 
+
+```{r chunk_3}
+
+smod_iv_test__noaa <- ivreg(math_score ~ IMTI | E_is, data = joined, subset = region != "Addis Ababa")
+
+smod_iv_test_noaa <- ivreg(verbal_score ~ IMTI | E_is, data = joined, subset = region != "Addis Ababa")
+
+
+stargazer(smod_iv_test__noaa, smod_iv_test_noaa, type = "text")
+```
 
 
 
