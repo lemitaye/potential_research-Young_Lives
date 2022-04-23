@@ -265,7 +265,7 @@ language_primary <- vars_r4 %>%
   # select(child_id, lang_primary)
 
 
-# join with region in round 3 and time invariant variables
+# join everything together ####
 
 joined <- time_invar %>% 
   left_join(language_primary, by = "child_id") %>% 
@@ -337,34 +337,84 @@ top_code <- function(var, ceil) {
   return(out)
 }
 
-
+# Generate main outcome variables and others
 joined <- joined %>% 
-  # Generate main outcome variable and instruments
-  mutate(
-    
-    active = case_when(
-      hwork_r5 == 0 ~ 0, 
-      hwork_r5 > 0 ~ 1
-    ),
-    
-    wage_employ = case_when(
-      # The following get 1:
-      #    5: Wage Employment (Agriculture)
-      #   12: Wage Employment (Unsalaried; Non-agriculture)
-      #   13: Regular Salaried Employment
-      type_activ %in% c(5, 12, 13) ~ 1,
+    mutate(
       
-      # If both "type_activ" and "active" are missing, they get NA.
-      is.na(type_activ) & is.na(active) ~ NA_real_,
+      active = case_when(
+        hwork_r5 == 0 ~ 0, 
+        hwork_r5 > 0 ~ 1
+      ),
       
-      # Otherwise, 0.
-      TRUE ~ 0
-    ),
-    
-    chsex = case_when(
+      wage_employ = case_when(
+        # The following get 1:
+        #    5: Wage Employment (Agriculture)
+        #   12: Wage Employment (Unsalaried; Non-agriculture)
+        #   13: Regular Salaried Employment
+        type_activ %in% c(5, 12, 13) ~ 1,
+        
+        # If both "type_activ" and "active" are missing, they get NA.
+        is.na(type_activ) & is.na(active) ~ NA_real_,
+        
+        # Moreover, self employed are excluded:
+        type_activ %in% c(1, 2, 3, 4, 8, 9, 10, 11, 19) ~ NA_real_,
+        
+        # Otherwise, 0.
+        TRUE ~ 0
+      ),
+      
+      self_employ = case_when(
+        # run "joined %>% count(type_activ)" to see the list:
+        type_activ %in% c(1, 2, 3, 4, 8, 9, 10, 11) ~ 1,
+        
+        # If both "type_activ" and "active" are missing, they get NA.
+        is.na(type_activ) & is.na(active) ~ NA_real_,
+        
+        # Moreover, wage employed are excluded:
+        type_activ %in% c(5, 12, 13, 19) ~ NA_real_,
+        
+        # Otherwise, 0.
+        TRUE ~ 0
+      ),
+      
+      wage_employII = case_when(
+        # The following get 1:
+        #   12: Wage Employment (Unsalaried; Non-agriculture)
+        #   13: Regular Salaried Employment
+        type_activ %in% c(12, 13) ~ 1,
+        
+        # If both "type_activ" and "active" are missing, they get NA.
+        is.na(type_activ) & is.na(active) ~ NA_real_,
+        
+        # Moreover, self employed in non-agri are excluded:
+        type_activ %in% c(8, 9, 10, 11, 19) ~ NA_real_,
+        
+        # Otherwise, 0.
+        TRUE ~ 0
+      ),
+      
+      self_employII = case_when(
+        # select self employed in non-agriculture
+        type_activ %in% c(8, 9, 10, 11) ~ 1,
+        
+        # If both "type_activ" and "active" are missing, they get NA.
+        is.na(type_activ) & is.na(active) ~ NA_real_,
+        
+        # Moreover, wage employed are excluded:
+        type_activ %in% c(12, 13, 19) ~ NA_real_,
+        
+        # Otherwise, 0.
+        TRUE ~ 0
+      ),
+      
+      chsex = case_when(
         chsex == 1 ~ "Male", chsex == 2 ~ "Female"
-        ) %>% factor(), 
-    
+      ) %>% factor()
+  )
+
+# Generate instruments
+joined <- joined %>% 
+  mutate(
     IMTI = case_when(
 
       region == "Tigray" & chlang == "Tigrigna" & lang_primary == "Tigrigna"
