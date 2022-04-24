@@ -381,7 +381,7 @@ joined <- joined %>%
         # The following get 1:
         #   12: Wage Employment (Unsalaried; Non-agriculture)
         #   13: Regular Salaried Employment
-        type_activ %in% c(12, 13) ~ 1,
+        type_activ %in% c(13) ~ 1,
         
         # If both "type_activ" and "active" are missing, they get NA.
         is.na(type_activ) & is.na(active) ~ NA_real_,
@@ -401,7 +401,7 @@ joined <- joined %>%
         is.na(type_activ) & is.na(active) ~ NA_real_,
         
         # Moreover, wage employed are excluded:
-        type_activ %in% c(12, 13, 19) ~ NA_real_,
+        type_activ %in% c(13, 19) ~ NA_real_,
         
         # Otherwise, 0.
         TRUE ~ 0

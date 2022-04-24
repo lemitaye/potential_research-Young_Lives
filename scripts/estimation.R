@@ -166,7 +166,7 @@ added_2 <- "hghgrade_4_num + factor(typesite_r3) +"
 
 fiv1 <- make_formula_iv("wage_employ", "E_is", added = NULL)
 fiv2 <- make_formula_iv("self_employ", "E_is", added = NULL)
-fiv3 <- make_formula_iv("raw_maths ", "E_is", added = NULL)
+fiv3 <- make_formula_iv("raw_maths", "E_is", added = NULL)
 fiv4 <- make_formula_iv("raw_lang", "E_is", added = NULL)
 fiv5 <- make_formula_iv("hghgrade_final_num", "E_is", added = NULL)
 fiv6 <- make_formula_iv("wage_employII", "E_is", added = NULL)
@@ -185,19 +185,23 @@ iv2aa <- felm(fiv2, data = aa_samp)
 iv3aa <- felm(fiv3, data = aa_samp)
 iv4aa <- felm(fiv4, data = aa_samp)
 iv5aa <- felm(fiv5, data = aa_samp)
+iv6aa <- felm(fiv6, data = aa_samp)
+iv7aa <- felm(fiv7, data = aa_samp)
 
 
 stargazer(
   # iv1, iv2,
   iv3, iv4, iv5,
-  iv6, iv7,
+  iv6, iv1,
   keep = c("IMTI"),
   keep.stat = c("n","rsq"),
   type = "text"
 )
 
 stargazer(
-  iv1aa, iv2aa, iv3aa, iv4aa,
+  # iv1aa, iv2aa, 
+  iv3aa, iv4aa, iv5aa,
+  iv6aa, iv1aa,
   keep = c("IMTI"),
   keep.stat = c("n","rsq"),
   type = "text"
