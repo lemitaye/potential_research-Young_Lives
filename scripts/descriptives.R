@@ -153,24 +153,6 @@ xtab <- xtable(
   digits = 4, caption = "Summary Statistics", label = "tab:01"
 ) 
 
-# nobs_descr_wrap <- function(chr, n = 2, a = "c") {
-#   
-#   n <- as.character(n)
-#   chr <- as.character(chr)
-#   
-#   paste0( "\\multicolumn{", n, "}{", a, "}{", chr, "}" )
-#   
-# }
-# 
-# obs_descr <- c(
-#   nobs_descr_wrap( comma( nrow(non_aa_descr) ) ), 
-#   nobs_descr_wrap( comma( nrow(aa_descr) ) )
-# )
-# 
-# obs_descr <- paste( paste(obs_descr, collapse = " & "), "\\\\" )
-# obs_descr <- paste( nobs_descr_wrap( " $ N $ ", a = "l" ), " & ", 
-#                     obs_descr )
-
 comm <- paste0(" \n \\\\[-1.8ex] \\multicolumn{6}{l}",
                "{\\footnotesize{\\textit{Note:} The standard deviations for proportions is 
                not presented.}} \n")
