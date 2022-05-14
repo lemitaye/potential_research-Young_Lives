@@ -114,22 +114,6 @@ make_formula_iv <- function(
 added_1 <- "region + factor(typesite_r3) +"
 added_2 <- "factor(typesite_r3) +"
 
-
-# fols1 <- make_formula_iv("wage_employ", added = added_1)
-# fols2 <- make_formula_iv("raw_maths", added = added_2)
-# fols3 <- make_formula_iv("raw_lang", added = added_2)
-
-# ols1 <- felm(fols1, data = non_aa_samp)
-# ols2 <- felm(fols2, data = non_aa_samp)
-# ols3 <- felm(fols3, data = non_aa_samp)
-
-# stargazer(
-#   ols1, ols2, ols3,
-#   keep = c("IMTI", "region"),
-#   keep.stat = c("n","rsq"),
-#   type = "text"
-# )
-
 fiv1 <- make_formula_iv("wage_employ", "E_is", added = NULL)
 fiv2 <- make_formula_iv("self_employ", "E_is", added = NULL)
 fiv3 <- make_formula_iv("raw_maths", "E_is", added = NULL)
