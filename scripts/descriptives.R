@@ -66,6 +66,7 @@ non_aa_descr %>%
   coord_flip()
 
 
+# Table of Summary Statistics (Table I) ####
 non_aa_descr <- non_aa_samp %>% 
   mutate(
     male = (chsex == "Male"),
@@ -78,8 +79,8 @@ non_aa_descr <- non_aa_samp %>%
     raw_lang, hghgrade_final_num, wage_employ, wage_employII
   ) %>% 
   # filter(complete.cases(.)) %>%
-  dummy_cols(c("region")) %>%
-  select(-c(region_Afar, region_Somali, `region_Addis Ababa`, region))
+  dummy_cols(c("region")) %>% 
+  select(-c(region))
 
 
 aa_descr <- aa_samp %>% 
@@ -171,7 +172,7 @@ xtab <- xtable(
 #                     obs_descr )
 
 comm <- paste0(" \n \\\\[-1.8ex] \\multicolumn{6}{l}",
-               "{\\scriptsize{The standard deviations for proportions is 
+               "{\\footnotesize{\\textit{Note:} The standard deviations for proportions is 
                not presented.}} \n")
 
 
