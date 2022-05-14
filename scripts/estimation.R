@@ -120,6 +120,7 @@ fiv5 <- make_formula_iv("hghgrade_final_num", "E_is", added = NULL)
 fiv6 <- make_formula_iv("wage_employII", "E_is", added = NULL)
 fiv7 <- make_formula_iv("self_employII", "E_is", added = NULL)
 
+# Estimation for the Non-AA sample
 iv1 <- felm(fiv1, data = non_aa_samp)
 iv2 <- felm(fiv2, data = non_aa_samp)
 iv3 <- felm(fiv3, data = non_aa_samp)
@@ -128,6 +129,7 @@ iv5 <- felm(fiv5, data = non_aa_samp)
 iv6 <- felm(fiv6, data = non_aa_samp)
 iv7 <- felm(fiv7, data = non_aa_samp)
 
+# Estimation for the Non-AA sample
 iv1aa <- felm(fiv1, data = aa_samp)
 # iv2aa <- felm(fiv2, data = aa_samp)  # has rank problems
 iv3aa <- felm(fiv3, data = aa_samp)
