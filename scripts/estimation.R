@@ -59,14 +59,12 @@ waldtest(m1, ~ E_is)[["F"]]
 
 # Reduced form for the AA sample:
 
-f_rf1 <- make_formula_frst_stg("wage_employ", "E_is")
+f_rf1 <- make_formula_frst_stg("wage_employ", "E_is", added = "hghgrade_final_num +")
 f_rf2 <- make_formula_frst_stg("raw_maths", "E_is")
 f_rf3 <- make_formula_frst_stg("raw_lang", "E_is")
 f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "E_is")
-f_rf5 <- make_formula_frst_stg("wage_employII", "E_is")
+f_rf5 <- make_formula_frst_stg("wage_employII", "E_is", added = "hghgrade_final_num +")
 
-
-# can't run these regressions because all E_is values are 0 for AA!
 rf1aa <- lm(f_rf1, data = aa_samp)
 rf2aa <- lm(f_rf2, data = aa_samp)
 rf3aa <- lm(f_rf3, data = aa_samp)
@@ -74,7 +72,7 @@ rf4aa <- lm(f_rf4, data = aa_samp)
 rf5aa <- lm(f_rf5, data = aa_samp)
 
 stargazer(
-  rf1aa, rf2aa, rf3aa, rf4aa, rf5aa,
+  rf2aa, rf3aa, rf4aa, rf1aa, rf5aa,
   keep = c("E_is"),
   type = "text",
   keep.stat = c("n","rsq")

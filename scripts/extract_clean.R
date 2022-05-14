@@ -474,7 +474,7 @@ joined <- joined %>%
       
       region == "SNNP" & chethnic == "Amhara" & lang_primary == "Amharic" ~ 0.5,
       
-      region == "Addis Ababa" & chethnic == "Amhara" ~ 1,
+      region == "Addis Ababa" & chethnic == "Amhara" ~ 0.75,
       
       TRUE ~ 0
     )
