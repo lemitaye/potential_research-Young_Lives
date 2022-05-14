@@ -4,6 +4,17 @@
 
 # This script runs the main regressions using the data generated in "extract_clean.R"
 
+rm(list = ls())
+
+# load the data:
+aa_samp <- read_csv("data/aa_samp.csv") %>% 
+  mutate_if(is.character, as.factor)    # convert all chr. to factor.
+
+non_aa_samp <- read_csv("data/non_aa_samp.csv") %>% 
+  mutate_if(is.character, as.factor)    # convert all chr. to factor.
+
+
+
 # Regression with covariates: ####
 
 make_formula_frst_stg <- function(dep_var, instrument, clus = FALSE, added = NULL) {
@@ -162,21 +173,6 @@ stargazer(
   type = "text"
 )
 
-
-
-
-
-
-ivss1 <- felm(fiv1, data = non_aa_samp, subset = region %in% c("SNNP"))
-ivss2 <- felm(fiv2, data = non_aa_samp, subset = region %in% c("SNNP"))
-ivss3 <- felm(fiv3, data = non_aa_samp, subset = region %in% c("SNNP"))
-
-stargazer(
-  ivss1, ivss2, ivss3,
-  keep = c("IMTI"),
-  keep.stat = c("n","rsq"),
-  type = "text"
-)
 
 # Robustness checks ####
 
