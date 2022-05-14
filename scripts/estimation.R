@@ -22,7 +22,7 @@ make_formula_frst_stg <- function(dep_var, instrument, clus = FALSE, added = NUL
   covar1 <- c(
     "zbfa", "stunting", "caredu_r1", "careage_r1", "factor(caresex_r1)", 
     "hhsize", "wi_new", "hq_new", "cd_new", "elecq_new", 
-    "ownlandhse_r1", "chsex"
+    "chsex"
     )
 
   covar <- paste(
@@ -60,8 +60,8 @@ waldtest(m1, ~ E_is)[["F"]]
 # Reduced form for the AA sample:
 
 f_rf1 <- make_formula_frst_stg("wage_employ", "E_is", added = "hghgrade_final_num +")
-f_rf2 <- make_formula_frst_stg("raw_maths", "E_is")
-f_rf3 <- make_formula_frst_stg("raw_lang", "E_is")
+f_rf2 <- make_formula_frst_stg("raw_maths", "E_is", added = "hghgrade_final_num +")
+f_rf3 <- make_formula_frst_stg("raw_lang", "E_is", added = "hghgrade_final_num +")
 f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "E_is")
 f_rf5 <- make_formula_frst_stg("wage_employII", "E_is", added = "hghgrade_final_num +")
 
