@@ -496,29 +496,3 @@ write_csv(aa_samp, "data/aa_samp.csv")
 write_csv(non_aa_samp, "data/non_aa_samp.csv")
 
 
-
-
-
-
-
-# 
-# 
-# 
-# # count missing values for all variables
-# joined %>% 
-#   summarise_all( ~sum(is.na(.)) )
-# 
-# # missing value for parents' education is not explained by death of parents
-# 
-# # migration over time is very small as the following shows:
-# joined %>% 
-#   count(region_r1, region_r2, region, region_r4, region_r5, sort = TRUE) %>% 
-#   print(n = 30)
-
-
-
-
-
-
-
-
