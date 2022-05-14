@@ -50,7 +50,7 @@ smod_iv_test_noaa <- ivreg(raw_lang ~ IMTI | E_is, data = joined, subset = regio
 stargazer(smod_iv_test__noaa, smod_iv_test_noaa, type = "text")
 
 
-# Regression with covariates:
+# Regression with covariates: ####
 
 make_formula_frst_stg <- function(dep_var, instrument, clus = FALSE, added = NULL) {
   # Define a vector of covariates
@@ -78,8 +78,6 @@ make_formula_frst_stg <- function(dep_var, instrument, clus = FALSE, added = NUL
   return(f)
 }
 
-
-
 f1 <- make_formula_frst_stg("IMTI", "E_is", added = "factor(typesite_r3) +", clus = TRUE)
 
 m1 <- felm(f1, data = non_aa_samp)
@@ -100,15 +98,18 @@ f_rf1 <- make_formula_frst_stg("wage_employ", "E_is")
 f_rf2 <- make_formula_frst_stg("raw_maths", "E_is")
 f_rf3 <- make_formula_frst_stg("raw_lang", "E_is")
 f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "E_is")
+f_rf5 <- make_formula_frst_stg("wage_employII", "E_is")
+
 
 # can't run these regressions because all E_is values are 0 for AA!
-rf1 <- lm(f_rf1, data = aa_samp)
-rf2 <- lm(f_rf2, data = aa_samp)
-rf3 <- lm(f_rf3, data = aa_samp)
-rf4 <- lm(f_rf4, data = aa_samp)
+rf1aa <- lm(f_rf1, data = aa_samp)
+rf2aa <- lm(f_rf2, data = aa_samp)
+rf3aa <- lm(f_rf3, data = aa_samp)
+rf4aa <- lm(f_rf4, data = aa_samp)
+rf5aa <- lm(f_rf5, data = aa_samp)
 
 stargazer(
-  rf1, rf2, rf3, rf4,
+  rf1aa, rf2aa, rf3aa, rf4aa, rf5aa,
   keep = c("E_is"),
   type = "text",
   keep.stat = c("n","rsq")
@@ -208,28 +209,7 @@ stargazer(
 )
 
 
-# Some descriptives:
 
-non_aa_samp %>% 
-  ggplot(aes(IMTI, raw_maths)) +
-  geom_point() +
-  facet_wrap(~ region)
-
-non_aa_samp %>% 
-  filter(!is.na(wage_employ)) %>% 
-  ggplot(aes(factor(wage_employ))) +
-  geom_histogram(stat = "count") +
-  facet_wrap(~ region)
-
-non_aa_samp %>% 
-  ggplot(aes(IMTI, wage_employ)) +
-  geom_point(position = "jitter") +
-  geom_hline(yintercept = 0.5, color = "blue") +
-  facet_wrap(~ region)
-
-non_aa_samp %>% 
-  ggplot(aes(factor(region), hghgrade_final_num)) +
-  geom_boxplot() 
 
 
 
@@ -244,9 +224,23 @@ stargazer(
   type = "text"
 )
 
+# Robustness checks ####
 
+non_aa_samp %>% 
+  count(chethnic, region, sort = TRUE) %>% 
+  filter(chethnic == "Amhara")
 
+# sample size issue
+# * only 39 Amharas not in Amhara
+# The others evan less.
 
+# Focus on Amharas
+
+non_aa_samp %>% 
+  filter( 
+    chethnic == "Amhara" & region != "Amhara"
+    )
+  
 
 
 

@@ -18,6 +18,9 @@ library(scales)
 library(stargazer)
 library(AER)
 library(lfe)
+library(starpolishr)
+library(fastDummies)
+library(xtable)
 
 theme_set(theme_light())
 

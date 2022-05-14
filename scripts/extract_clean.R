@@ -474,7 +474,7 @@ joined <- joined %>%
       
       region == "SNNP" & chethnic == "Amhara" & lang_primary == "Amharic" ~ 0.5,
       
-      region == "Addis Ababa" & chethnic == "Amhara" ~ 0.75,
+      region == "Addis Ababa" & chethnic == "Amhara" ~ 1,
       
       TRUE ~ 0
     )
@@ -491,6 +491,9 @@ aa_samp <- joined %>%
 
 non_aa_samp <- joined %>% 
   filter(region !=  "Addis Ababa")
+
+write_csv(aa_samp, "data/aa_samp.csv")
+write_csv(non_aa_samp, "data/non_aa_samp.csv")
 
 
 
