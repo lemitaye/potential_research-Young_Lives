@@ -130,13 +130,13 @@ iv6 <- felm(fiv6, data = non_aa_samp)
 iv7 <- felm(fiv7, data = non_aa_samp)
 
 # Estimation for the Non-AA sample
-iv1aa <- felm(fiv1, data = aa_samp)
+iv1aa <- felm(fiv1, data = aa_samp, subset = (type_activ != 19))
 # iv2aa <- felm(fiv2, data = aa_samp)  # has rank problems
-iv3aa <- felm(fiv3, data = aa_samp)
-iv4aa <- felm(fiv4, data = aa_samp)
-iv5aa <- felm(fiv5, data = aa_samp)
-iv6aa <- felm(fiv6, data = aa_samp)
-iv7aa <- felm(fiv7, data = aa_samp)
+iv3aa <- felm(fiv3, data = aa_samp, subset = (type_activ != 19))
+iv4aa <- felm(fiv4, data = aa_samp, subset = (type_activ != 19))
+iv5aa <- felm(fiv5, data = aa_samp, subset = (type_activ != 19))
+iv6aa <- felm(fiv6, data = aa_samp, subset = (type_activ != 19))
+iv7aa <- felm(fiv7, data = aa_samp, subset = (type_activ != 19))
 
 
 stargazer(
