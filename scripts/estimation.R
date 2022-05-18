@@ -59,20 +59,20 @@ waldtest(m1, ~ E_is)[["F"]]
 
 # Reduced form for the AA sample:
 
-f_rf1 <- make_formula_frst_stg("wage_employ", "E_is", added = "hghgrade_final_num + raw_maths + raw_lang +")
+f_rf1 <- make_formula_frst_stg("wage_employ", "E_is")
 f_rf2 <- make_formula_frst_stg("raw_maths", "E_is")
 f_rf3 <- make_formula_frst_stg("raw_lang", "E_is")
 f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "E_is")
-f_rf5 <- make_formula_frst_stg("wage_employII", "E_is", added = "hghgrade_final_num + raw_maths + raw_lang +")
+f_rf5 <- make_formula_frst_stg("wage_employII", "E_is")
 
-rf1aa <- lm(f_rf1, data = aa_samp)
-rf2aa <- lm(f_rf2, data = aa_samp)
-rf3aa <- lm(f_rf3, data = aa_samp)
-rf4aa <- lm(f_rf4, data = aa_samp)
-rf5aa <- lm(f_rf5, data = aa_samp)
+rf1aa <- lm(f_rf1, data = aa_samp, subset = (type_activ != 19))
+rf2aa <- lm(f_rf2, data = aa_samp, subset = (type_activ != 19))
+rf3aa <- lm(f_rf3, data = aa_samp, subset = (type_activ != 19))
+rf4aa <- lm(f_rf4, data = aa_samp, subset = (type_activ != 19))
+rf5aa <- lm(f_rf5, data = aa_samp, subset = (type_activ != 19))
 
 stargazer(
-  rf2aa, rf3aa, rf4aa, rf1aa, rf5aa,
+  rf2aa, rf3aa, rf4aa, rf5aa ,rf1aa, 
   keep = c("E_is"),
   type = "text",
   keep.stat = c("n","rsq")

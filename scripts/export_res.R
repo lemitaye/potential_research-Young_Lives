@@ -92,7 +92,7 @@ star_tex_write(tabIII,
 ## Reduced form for the AA sample ####
 
 rfaa <- stargazer(
-  rf2aa, rf3aa, rf4aa, rf1aa, rf5aa,
+  rf2aa, rf3aa, rf4aa, rf5aa, rf1aa,
   keep = c("E_is"),
   # type = "text",
   keep.stat = c("n","rsq"),
