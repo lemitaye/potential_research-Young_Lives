@@ -444,7 +444,7 @@ joined <- joined %>%
       region == "SNNP" & chlang == "Amharic" & lang_primary == "Amharic"
       ~ top_code(hghgrade_final_num, 4),
 
-      region == "Addis Ababa" & chlang == "Amharic" & lang_primary == "Amharic"
+      region == "Addis Ababa" & chethnic == "Amhara" & lang_primary == "Amharic"
       ~ top_code(hghgrade_final_num, 6),
 
       TRUE ~ 0
