@@ -45,8 +45,10 @@ test_r4 <- cognitive_r4 %>%
   select(
     child_id = CHILDCODE,
     lang_instr = RDITLANR4,
+    testlang_lang = RDGCMPLANR4,
     raw_lang = lang_raw,
     perco_lang = lang_perco,
+    testlang_math = MTHLANR4,
     raw_maths = maths_raw,
     perco_maths = maths_perco
   ) %>% 
@@ -59,6 +61,24 @@ test_r4 <- cognitive_r4 %>%
       lang_instr == 5 ~ "Wolayta",
       lang_instr == 6 ~ "Sidamigna",
       lang_instr == 7 ~ "Tigrigna"
+    ),
+    testlang_lang = case_when(
+      testlang_lang == 1 ~ "English",
+      testlang_lang == 2 ~ "Amharic",
+      testlang_lang == 3 ~ "Hadiya",
+      testlang_lang == 4 ~ "Afaan Oromo",
+      testlang_lang == 5 ~ "Wolayta",
+      testlang_lang == 6 ~ "Sidamigna",
+      testlang_lang == 7 ~ "Tigrigna"
+    ),
+    testlang_math = case_when(
+      testlang_math == 1 ~ "English",
+      testlang_math == 2 ~ "Amharic",
+      testlang_math == 3 ~ "Hadiya",
+      testlang_math == 4 ~ "Afaan Oromo",
+      testlang_math == 5 ~ "Wolayta",
+      testlang_math == 6 ~ "Sidamigna",
+      testlang_math == 7 ~ "Tigrigna"
     )
   )
 
