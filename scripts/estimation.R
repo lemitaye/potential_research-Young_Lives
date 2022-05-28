@@ -176,9 +176,65 @@ non_aa_samp %>%
     )
   
 
+# Robustness check:
 
+orom.tig <- non_aa_samp %>% 
+  filter(region %in% c("Oromia", "Tigray")) %>% 
+  mutate( T = (region == "Tigray") )
 
+orom.snnp <- non_aa_samp %>% 
+  filter(region %in% c("Oromia", "SNNP")) %>% 
+  mutate( T = (region == "Oromia") )
 
+orom.amh <- non_aa_samp %>% 
+  filter(region %in% c("Oromia", "Amhara")) %>% 
+  mutate( T = (region == "Amhara") )
 
+f_rf1 <- make_formula_frst_stg("wage_employ", "T")
+f_rf2 <- make_formula_frst_stg("raw_maths", "T")
+f_rf3 <- make_formula_frst_stg("raw_lang", "T")
+f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "T")
+f_rf5 <- make_formula_frst_stg("wage_employII", "T")
 
+# Tigray vs. Oromia
+rf1ot <- lm(f_rf1, data = orom.tig)
+rf2ot <- lm(f_rf2, data = orom.tig)
+rf3ot <- lm(f_rf3, data = orom.tig)
+rf4ot <- lm(f_rf4, data = orom.tig)
+rf5ot <- lm(f_rf5, data = orom.tig)
+
+stargazer(
+  rf2ot, rf3ot, rf4ot, rf5ot ,rf1ot, 
+  keep = c("T"),
+  keep.stat = c("n","rsq"),
+  type = "text"
+)
+
+# SNNP vs. Oromia
+rf1os <- lm(f_rf1, data = orom.snnp)
+rf2os <- lm(f_rf2, data = orom.snnp)
+rf3os <- lm(f_rf3, data = orom.snnp)
+rf4os <- lm(f_rf4, data = orom.snnp)
+rf5os <- lm(f_rf5, data = orom.snnp)
+
+stargazer(
+  rf2os, rf3os, rf4os, rf5os ,rf1os, 
+  keep = c("T"),
+  keep.stat = c("n","rsq"),
+  type = "text"
+)
+
+# Amhara vs. Oromia
+rf1oa <- lm(f_rf1, data = orom.amh)
+rf2oa <- lm(f_rf2, data = orom.amh)
+rf3oa <- lm(f_rf3, data = orom.amh)
+rf4oa <- lm(f_rf4, data = orom.amh)
+rf5oa <- lm(f_rf5, data = orom.amh)
+
+stargazer(
+  rf2oa, rf3oa, rf4oa, rf5oa ,rf1oa, 
+  keep = c("T"),
+  keep.stat = c("n","rsq"),
+  type = "text"
+)
 
