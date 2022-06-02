@@ -190,11 +190,21 @@ orom.amh <- non_aa_samp %>%
   filter(region %in% c("Oromia", "Amhara")) %>% 
   mutate( T = (region == "Amhara") )
 
-f_rf1 <- make_formula_frst_stg("wage_employ", "T")
-f_rf2 <- make_formula_frst_stg("raw_maths", "T")
-f_rf3 <- make_formula_frst_stg("raw_lang", "T")
-f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "T")
-f_rf5 <- make_formula_frst_stg("wage_employII", "T")
+f_rf1 <- make_formula_frst_stg("wage_employ", "T"
+                               , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+                               )
+f_rf2 <- make_formula_frst_stg("raw_maths", "T"
+                               , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+                               )
+f_rf3 <- make_formula_frst_stg("raw_lang", "T"
+                               , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+                               )
+f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "T"
+                               , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+                               )
+f_rf5 <- make_formula_frst_stg("wage_employII", "T"
+                               , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+                               )
 
 # Tigray vs. Oromia
 rf1ot <- lm(f_rf1, data = orom.tig)
@@ -237,4 +247,16 @@ stargazer(
   keep.stat = c("n","rsq"),
   type = "text"
 )
+
+# Dist. of IMTI (Oromia vs. Tigray)
+
+orom.tig %>% 
+  count(region, IMTI) %>% 
+  ggplot(aes(IMTI, n)) +
+  geom_col() +
+  facet_wrap(~region)
+
+# could use this as a descriptive presentation: 
+non_aa_samp %>% select(region, testlang_lang, chlang, raw_lang) %>% 
+  count(testlang_lang, chlang, sort = TRUE)
 
