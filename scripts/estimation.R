@@ -8,10 +8,12 @@ rm(list = ls())
 
 # load the data:
 aa_samp <- read_csv("data/aa_samp.csv") %>% 
-  mutate_if(is.character, as.factor)    # convert all chr. to factor.
+  mutate_if(is.character, as.factor) %>% # convert all chr. to factor.
+  filter(raw_lang != 0) 
 
 non_aa_samp <- read_csv("data/non_aa_samp.csv") %>% 
-  mutate_if(is.character, as.factor)    # convert all chr. to factor.
+  mutate_if(is.character, as.factor) %>% # convert all chr. to factor.
+  filter(raw_lang != 0)   
 
 
 
@@ -22,7 +24,7 @@ make_formula_frst_stg <- function(dep_var, instrument, clus = FALSE, added = NUL
   covar1 <- c(
     "zbfa", "stunting", "caredu_r1", "careage_r1", "factor(caresex_r1)", 
     "hhsize", "wi_new", "hq_new", "cd_new", "elecq_new", 
-    "chsex"
+    "chsex", "factor(chldrel)", "preprim", "agegr1"
     )
 
   covar <- paste(
@@ -180,7 +182,16 @@ non_aa_samp %>%
 
 orom.tig <- non_aa_samp %>% 
   filter(region %in% c("Oromia", "Tigray")) %>% 
-  mutate( T = (region == "Tigray") )
+  mutate( 
+    T = (region == "Tigray"),
+    
+    match = case_when(
+      region == "Tigray" & testlang_lang == "Tigrigna" & chlang == "Tigrigna"  ~ 1,
+      region == "Oromia" & testlang_lang == "Afaan Oromo" & chlang == "Afaan Oromo" ~ 1,
+      TRUE ~ 0
+    )
+      
+  )
 
 orom.snnp <- non_aa_samp %>% 
   filter(region %in% c("Oromia", "SNNP")) %>% 
@@ -191,13 +202,13 @@ orom.amh <- non_aa_samp %>%
   mutate( T = (region == "Amhara") )
 
 f_rf1 <- make_formula_frst_stg("wage_employ", "T"
-                               , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+            , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
                                )
 f_rf2 <- make_formula_frst_stg("raw_maths", "T"
-                               , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+            , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
                                )
 f_rf3 <- make_formula_frst_stg("raw_lang", "T"
-                               , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+            , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) + factor(chldrel) +"
                                )
 f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "T"
                                , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
@@ -209,7 +220,7 @@ f_rf5 <- make_formula_frst_stg("wage_employII", "T"
 # Tigray vs. Oromia
 rf1ot <- lm(f_rf1, data = orom.tig)
 rf2ot <- lm(f_rf2, data = orom.tig)
-rf3ot <- lm(f_rf3, data = orom.tig)
+rf3ot <- lm(f_rf3, data = orom.tig, subset = (match == 1) )
 rf4ot <- lm(f_rf4, data = orom.tig)
 rf5ot <- lm(f_rf5, data = orom.tig)
 
@@ -256,7 +267,34 @@ orom.tig %>%
   geom_col() +
   facet_wrap(~region)
 
+orom.tig %>% 
+  ggplot(aes(raw_lang)) +
+  geom_histogram() +
+  facet_wrap(~region)
+
 # could use this as a descriptive presentation: 
 non_aa_samp %>% select(region, testlang_lang, chlang, raw_lang) %>% 
   count(testlang_lang, chlang, sort = TRUE)
+
+# 
+oromia <- orom.tig %>% 
+  select(region, testlang_lang, raw_lang, chlang) %>% 
+  filter(region == "Oromia") %>% 
+  mutate( match = case_when(
+    as.character(testlang_lang) == as.character(chlang)  ~ 1, TRUE ~ 0
+  ))
+
+lm(raw_lang ~ match, data = oromia) %>% summary()
+
+
+  
+
+
+
+
+
+
+
+
+
 
