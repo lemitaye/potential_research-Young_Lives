@@ -174,7 +174,16 @@ vars_r4 <- cons_oc %>%
     hghgrade_r4 = hghgrade, # Highest grade achieved at time of interview
     entype_r4 = entype,
     timesch_r4 = timesch,
-    childloc_r4 = childloc 
+    childloc_r4 = childloc,
+    psnp_pw_r4 = psnp_pw,
+    psnp_ds_r4 = psnp_ds,
+    othprog_r4 = othprog,
+    hep_r4 = hep,
+    resettled_r4 = resettled,
+    eap_r4 = eap,
+    foodsec_r4 = foodsec,
+    credit_r4 = credit,
+    
   ) 
 
 
@@ -208,7 +217,16 @@ vars_r3 <- cons_oc %>%
     cookingq_new, # Access to adequate fuels for cooking
     aniany, # Household owned any livestock in the past 12 months
     # ownlandhse_r3 = ownlandhse, #  Household owns land where house is on
-    ownhouse # Household owns the house
+    ownhouse, # Household owns the house
+    childloc_r3 = childloc,
+    psnp_pw_r3 = psnp_pw,
+    psnp_ds_r3 = psnp_ds,
+    othprog_r3 = othprog,
+    hep_r3 = hep,
+    resettled_r3 = resettled,
+    eap_r3 = eap,
+    foodsec_r3 = foodsec,
+    credit_r3 = credit
   ) 
 
 
@@ -237,7 +255,16 @@ vars_r2 <- cons_oc %>%
     # measles,
     literate_r2 = literate,
     levlwrit_r2 = levlwrit,
-    levlread_r2 = levlread
+    levlread_r2 = levlread,
+    childloc_r2 = childloc,
+    psnp_pw_r2 = psnp_pw,
+    psnp_ds_r2 = psnp_ds,
+    othprog_r2 = othprog,
+    hep_r2 = hep,
+    resettled_r2 = resettled,
+    eap_r2 = eap,
+    foodsec_r2 = foodsec,
+    credit_r2 = credit
   ) 
 
 # Variables from round 1
@@ -267,7 +294,16 @@ vars_r1 <- cons_oc %>%
     carerel_r1 = carerel, # Caregiver's relationship to YL child
     carecantread_r1 = carecantread, # Caregiver cannot read
     ownlandhse_r1 = ownlandhse, #  Household owns land where house is on
-    numante
+    numante,
+    childloc_r1 = childloc,
+    psnp_pw_r1 = psnp_pw,
+    psnp_ds_r1 = psnp_ds,
+    othprog_r1 = othprog,
+    hep_r1 = hep,
+    resettled_r1 = resettled,
+    eap_r1 = eap,
+    foodsec_r1 = foodsec,
+    credit_r1 = credit
   ) 
 
 # Construction of variables ####

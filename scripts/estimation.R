@@ -22,9 +22,10 @@ non_aa_samp <- read_csv("data/non_aa_samp.csv") %>%
 make_formula_frst_stg <- function(dep_var, instrument, clus = FALSE, added = NULL) {
   # Define a vector of covariates
   covar1 <- c(
-    "zbfa", "stunting", "caredu_r1", "careage_r1", "factor(caresex_r1)", 
+    "zbfa", "caredu_r1", "careage_r1", "factor(caresex_r1)", 
     "hhsize", "wi_new", "hq_new", "cd_new", "elecq_new", 
-    "chsex", "factor(chldrel)", "preprim", "agegr1"
+    "chsex", "factor(chldrel)", "preprim", "agegr1", 
+    "factor(foodsec_r3)", "entype_r4"
     )
 
   covar <- paste(
@@ -89,7 +90,8 @@ make_formula_iv <- function(
     "chsex", "zbfa", "stunting", "caredu_r1",
     "careage_r1", "factor(caresex_r1)", "hhsize", 
     "wi_new", "hq_new", "cd_new", "elecq_new", 
-    "ownlandhse_r1"
+    "ownlandhse_r1", "factor(foodsec_r3)"#, 
+    # "entype_r4"  # only for the AA sample (use separate formula)
   )
   covar2 <- 0
   
@@ -131,7 +133,7 @@ iv5 <- felm(fiv5, data = non_aa_samp)
 iv6 <- felm(fiv6, data = non_aa_samp)
 iv7 <- felm(fiv7, data = non_aa_samp)
 
-# Estimation for the Non-AA sample
+# Estimation for the AA sample
 iv1aa <- felm(fiv1, data = aa_samp, subset = (type_activ != 19))
 # iv2aa <- felm(fiv2, data = aa_samp)  # has rank problems
 iv3aa <- felm(fiv3, data = aa_samp, subset = (type_activ != 19))
@@ -143,7 +145,7 @@ iv7aa <- felm(fiv7, data = aa_samp, subset = (type_activ != 19))
 
 stargazer(
   # iv1, iv2,
-  iv3, iv4, iv5,
+  iv3, iv4,
   iv6, iv1,
   keep = c("IMTI"),
   keep.stat = c("n","rsq"),
@@ -152,7 +154,7 @@ stargazer(
 
 stargazer(
   # iv1aa, iv2aa, 
-  iv3aa, iv4aa, iv5aa,
+  iv3aa, iv4aa,
   iv6aa, iv1aa,
   keep = c("IMTI"),
   keep.stat = c("n","rsq"),
@@ -183,7 +185,7 @@ non_aa_samp %>%
 orom.tig <- non_aa_samp %>% 
   filter(region %in% c("Oromia", "Tigray")) %>% 
   mutate( 
-    T = (region == "Tigray"),
+    Tigray = (region == "Tigray"),
     
     match = case_when(
       region == "Tigray" & testlang_lang == "Tigrigna" & chlang == "Tigrigna"  ~ 1,
@@ -193,28 +195,48 @@ orom.tig <- non_aa_samp %>%
       
   )
 
-orom.snnp <- non_aa_samp %>% 
-  filter(region %in% c("Oromia", "SNNP")) %>% 
-  mutate( T = (region == "Oromia") )
+make_formula_frst_stg <- function(dep_var, instrument, clus = FALSE, added = NULL) {
+  # Define a vector of covariates
+  covar1 <- c(
+    "zbfa", "caredu_r1", "careage_r1", "factor(caresex_r1)", 
+    "hhsize", "wi_new", "hq_new", "cd_new", "elecq_new", 
+    "chsex", "factor(chldrel)", "preprim", "agegr1", 
+    "factor(foodsec_r3)"
+  )
+  
+  covar <- paste(
+    paste(covar1, collapse = "+")
+  )
+  
+  if (clus) {
+    f <- as.formula(paste(
+      dep_var, " ~ ", instrument, " + ", added, covar,
+      " | 0 | 0 | region"
+    ))
+  } else {
+    f <- as.formula(paste(
+      dep_var, " ~ ", instrument, " + ", added, covar
+    ))
+  }
+  
+  return(f)
+}
 
-orom.amh <- non_aa_samp %>% 
-  filter(region %in% c("Oromia", "Amhara")) %>% 
-  mutate( T = (region == "Amhara") )
 
-f_rf1 <- make_formula_frst_stg("wage_employ", "T"
-            , added = "IMTI + ownlandhse_r1 + rural_3 + timesch_r4 +"
+f_rf1 <- make_formula_frst_stg("wage_employ", "Tigray"
+            , added = "IMTI + ownlandhse_r1 + rural_3 +"
                                )
-f_rf2 <- make_formula_frst_stg("raw_maths", "T"
-            , added = "IMTI + ownlandhse_r1 + rural_3 + timesch_r4 + factor(levlwrit_r2) + factor(levlread_r2) + literate_r2 +"
+f_rf2 <- make_formula_frst_stg("raw_maths", "Tigray"
+            , added = "IMTI + ownlandhse_r1 + rural_3 +"
                                )
-f_rf3 <- make_formula_frst_stg("raw_lang", "T"
-            , added = "IMTI + ownlandhse_r1 + rural_3 + timesch_r4 + factor(levlwrit_r2) + factor(levlread_r2) + literate_r2 +"
+f_rf3 <- make_formula_frst_stg("raw_lang", "Tigray"
+            , added = "IMTI + ownlandhse_r1 + rural_3 +"
                                )
-f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "T"
-                               , added = "IMTI + ownlandhse_r1 + rural_3 + factor(entype_r4) + timesch_r4 + factor(levlwrit_r2) + factor(levlread_r2) + literate_r2 +"
+f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "Tigray"
+                               , added = "IMTI + ownlandhse_r1 + rural_3 +"
                                )
-f_rf5 <- make_formula_frst_stg("wage_employII", "T"
-                               , added = "IMTI + ownlandhse_r1 + rural_3 + factor(entype_r4) + timesch_r4 + factor(levlwrit_r2) + factor(levlread_r2) + literate_r2 +"
+f_rf5 <- make_formula_frst_stg("wage_employII", "Tigray"
+                               , added = "IMTI + ownlandhse_r1 + rural_3 +"
                                )
 
 # Tigray vs. Oromia
@@ -225,11 +247,21 @@ rf4ot <- lm(f_rf4, data = orom.tig)
 rf5ot <- lm(f_rf5, data = orom.tig)
 
 stargazer(
-  rf2ot, rf3ot, rf4ot, rf5ot ,rf1ot, 
+  rf2ot, rf3ot, rf5ot ,rf1ot, 
   keep = c("T"),
   keep.stat = c("n","rsq"),
   type = "text"
 )
+
+
+
+orom.snnp <- non_aa_samp %>% 
+  filter(region %in% c("Oromia", "SNNP")) %>% 
+  mutate( T = (region == "Oromia") )
+
+orom.amh <- non_aa_samp %>% 
+  filter(region %in% c("Oromia", "Amhara")) %>% 
+  mutate( T = (region == "Amhara") )
 
 # SNNP vs. Oromia
 rf1os <- lm(f_rf1, data = orom.snnp)
@@ -270,6 +302,17 @@ orom.tig %>%
 orom.tig %>% 
   ggplot(aes(raw_lang)) +
   geom_histogram() +
+  facet_wrap(~region)
+
+orom.tig %>% 
+  ggplot(aes(hghgrade_final_num)) +
+  geom_histogram() +
+  facet_wrap(~region)
+
+orom.tig %>%
+  count(region, childloc_r4) %>% 
+  ggplot(aes(factor(childloc_r4), n)) +
+  geom_col() +
   facet_wrap(~region)
 
 # could use this as a descriptive presentation: 
