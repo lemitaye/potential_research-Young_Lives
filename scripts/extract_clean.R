@@ -172,6 +172,9 @@ vars_r4 <- cons_oc %>%
     child_id, # id
     region_r4 = region, # region of residence
     hghgrade_r4 = hghgrade, # Highest grade achieved at time of interview
+    entype_r4 = entype,
+    timesch_r4 = timesch,
+    childloc_r4 = childloc 
   ) 
 
 
@@ -230,6 +233,11 @@ vars_r2 <- cons_oc %>%
     # carerel_r2 = carerel, # Caregiver's relationship to YL child
     # carecantread_r2 = carecantread, # Caregiver cannot read
     # ownlandhse_r2 = ownlandhse #  Household owns land where house is on
+    # bcg,
+    # measles,
+    literate_r2 = literate,
+    levlwrit_r2 = levlwrit,
+    levlread_r2 = levlread
   ) 
 
 # Variables from round 1
@@ -258,7 +266,8 @@ vars_r1 <- cons_oc %>%
     caresex_r1 = caresex, # Caregiver's sex
     carerel_r1 = carerel, # Caregiver's relationship to YL child
     carecantread_r1 = carecantread, # Caregiver cannot read
-    ownlandhse_r1 = ownlandhse #  Household owns land where house is on
+    ownlandhse_r1 = ownlandhse, #  Household owns land where house is on
+    numante
   ) 
 
 # Construction of variables ####
@@ -429,7 +438,11 @@ joined <- joined %>%
       
       chsex = case_when(
         chsex == 1 ~ "Male", chsex == 2 ~ "Female"
-      ) %>% factor()
+      ) %>% factor(),
+      
+      rural_3 = case_when(
+        typesite_r3 == 1 ~ 0, typesite_r3 == 2 ~ 1
+      ) 
   )
 
 # Generate instruments

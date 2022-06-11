@@ -2,7 +2,7 @@
 # 
 # Project Title: " ..."
 # 
-# Project Owners: Teferi Mergo and Lemi Daba
+# Project Owners: Teferi Mergo (PhD) and Lemi Daba
 # R Script "master"
 # Created on: March 25, 2022
 ########################################################################~

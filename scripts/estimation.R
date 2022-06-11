@@ -202,19 +202,19 @@ orom.amh <- non_aa_samp %>%
   mutate( T = (region == "Amhara") )
 
 f_rf1 <- make_formula_frst_stg("wage_employ", "T"
-            , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+            , added = "IMTI + ownlandhse_r1 + rural_3 + timesch_r4 +"
                                )
 f_rf2 <- make_formula_frst_stg("raw_maths", "T"
-            , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+            , added = "IMTI + ownlandhse_r1 + rural_3 + timesch_r4 + factor(levlwrit_r2) + factor(levlread_r2) + literate_r2 +"
                                )
 f_rf3 <- make_formula_frst_stg("raw_lang", "T"
-            , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) + factor(chldrel) +"
+            , added = "IMTI + ownlandhse_r1 + rural_3 + timesch_r4 + factor(levlwrit_r2) + factor(levlread_r2) + literate_r2 +"
                                )
 f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "T"
-                               , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+                               , added = "IMTI + ownlandhse_r1 + rural_3 + factor(entype_r4) + timesch_r4 + factor(levlwrit_r2) + factor(levlread_r2) + literate_r2 +"
                                )
 f_rf5 <- make_formula_frst_stg("wage_employII", "T"
-                               , added = "IMTI + ownlandhse_r1 + factor(typesite_r3) +"
+                               , added = "IMTI + ownlandhse_r1 + rural_3 + factor(entype_r4) + timesch_r4 + factor(levlwrit_r2) + factor(levlread_r2) + literate_r2 +"
                                )
 
 # Tigray vs. Oromia
