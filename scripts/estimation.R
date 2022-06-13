@@ -25,7 +25,7 @@ make_formula_frst_stg <- function(dep_var, instrument, clus = FALSE, added = NUL
     "zbfa", "caredu_r1", "careage_r1", "factor(caresex_r1)", 
     "hhsize", "wi_new", "hq_new", "cd_new", "elecq_new", 
     "chsex", "factor(chldrel)", "preprim", "agegr1", 
-    "factor(foodsec_r3)", "entype_r4"
+    "factor(foodsec_r3)"
     )
 
   covar <- paste(
@@ -62,11 +62,11 @@ waldtest(m1, ~ E_is)[["F"]]
 
 # Reduced form for the AA sample:
 
-f_rf1 <- make_formula_frst_stg("wage_employ", "E_is")
-f_rf2 <- make_formula_frst_stg("raw_maths", "E_is")
-f_rf3 <- make_formula_frst_stg("raw_lang", "E_is")
-f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "E_is")
-f_rf5 <- make_formula_frst_stg("wage_employII", "E_is")
+f_rf1 <- make_formula_frst_stg("wage_employ", "E_is", added = "entype_r4 +")
+f_rf2 <- make_formula_frst_stg("raw_maths", "E_is", added = "entype_r4 +")
+f_rf3 <- make_formula_frst_stg("raw_lang", "E_is", added = "entype_r4 +")
+f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "E_is", added = "entype_r4 +")
+f_rf5 <- make_formula_frst_stg("wage_employII", "E_is", added = "entype_r4 +")
 
 rf1aa <- lm(f_rf1, data = aa_samp, subset = (type_activ != 19))
 rf2aa <- lm(f_rf2, data = aa_samp, subset = (type_activ != 19))
@@ -75,7 +75,7 @@ rf4aa <- lm(f_rf4, data = aa_samp, subset = (type_activ != 19))
 rf5aa <- lm(f_rf5, data = aa_samp, subset = (type_activ != 19))
 
 stargazer(
-  rf2aa, rf3aa, rf4aa, rf5aa ,rf1aa, 
+  rf2aa, rf3aa, rf5aa ,rf1aa, 
   keep = c("E_is"),
   type = "text",
   keep.stat = c("n","rsq")
@@ -112,10 +112,6 @@ make_formula_iv <- function(
   return(f)
 }
 
-
-added_1 <- "region + factor(typesite_r3) +"
-added_2 <- "factor(typesite_r3) +"
-
 fiv1 <- make_formula_iv("wage_employ", "E_is", added = NULL)
 fiv2 <- make_formula_iv("self_employ", "E_is", added = NULL)
 fiv3 <- make_formula_iv("raw_maths", "E_is", added = NULL)
@@ -133,16 +129,6 @@ iv5 <- felm(fiv5, data = non_aa_samp)
 iv6 <- felm(fiv6, data = non_aa_samp)
 iv7 <- felm(fiv7, data = non_aa_samp)
 
-# Estimation for the AA sample
-iv1aa <- felm(fiv1, data = aa_samp, subset = (type_activ != 19))
-# iv2aa <- felm(fiv2, data = aa_samp)  # has rank problems
-iv3aa <- felm(fiv3, data = aa_samp, subset = (type_activ != 19))
-iv4aa <- felm(fiv4, data = aa_samp, subset = (type_activ != 19))
-iv5aa <- felm(fiv5, data = aa_samp, subset = (type_activ != 19))
-iv6aa <- felm(fiv6, data = aa_samp, subset = (type_activ != 19))
-iv7aa <- felm(fiv7, data = aa_samp, subset = (type_activ != 19))
-
-
 stargazer(
   # iv1, iv2,
   iv3, iv4,
@@ -151,6 +137,23 @@ stargazer(
   keep.stat = c("n","rsq"),
   type = "text"
 )
+
+# Estimation for the AA sample
+fiv1aa <- make_formula_iv("wage_employ", "E_is", added = "entype_r4 +")
+fiv2aa <- make_formula_iv("self_employ", "E_is", added = "entype_r4 +")
+fiv3aa <- make_formula_iv("raw_maths", "E_is", added = "entype_r4 +")
+fiv4aa <- make_formula_iv("raw_lang", "E_is", added = "entype_r4 +")
+fiv5aa <- make_formula_iv("hghgrade_final_num", "E_is", added = "entype_r4 +")
+fiv6aa <- make_formula_iv("wage_employII", "E_is", added = "entype_r4 +")
+fiv7aa <- make_formula_iv("self_employII", "E_is", added = "entype_r4 +")
+
+iv1aa <- felm(fiv1aa, data = aa_samp, subset = (type_activ != 19))
+# iv2aa <- felm(fiv2, data = aa_samp)  # has rank problems
+iv3aa <- felm(fiv3aa, data = aa_samp, subset = (type_activ != 19))
+iv4aa <- felm(fiv4aa, data = aa_samp, subset = (type_activ != 19))
+iv5aa <- felm(fiv5aa, data = aa_samp, subset = (type_activ != 19))
+iv6aa <- felm(fiv6aa, data = aa_samp, subset = (type_activ != 19))
+iv7aa <- felm(fiv7aa, data = aa_samp, subset = (type_activ != 19))
 
 stargazer(
   # iv1aa, iv2aa, 
@@ -194,34 +197,6 @@ orom.tig <- non_aa_samp %>%
     )
       
   )
-
-make_formula_frst_stg <- function(dep_var, instrument, clus = FALSE, added = NULL) {
-  # Define a vector of covariates
-  covar1 <- c(
-    "zbfa", "caredu_r1", "careage_r1", "factor(caresex_r1)", 
-    "hhsize", "wi_new", "hq_new", "cd_new", "elecq_new", 
-    "chsex", "factor(chldrel)", "preprim", "agegr1", 
-    "factor(foodsec_r3)"
-  )
-  
-  covar <- paste(
-    paste(covar1, collapse = "+")
-  )
-  
-  if (clus) {
-    f <- as.formula(paste(
-      dep_var, " ~ ", instrument, " + ", added, covar,
-      " | 0 | 0 | region"
-    ))
-  } else {
-    f <- as.formula(paste(
-      dep_var, " ~ ", instrument, " + ", added, covar
-    ))
-  }
-  
-  return(f)
-}
-
 
 f_rf1 <- make_formula_frst_stg("wage_employ", "Tigray"
             , added = "IMTI + ownlandhse_r1 + rural_3 +"
