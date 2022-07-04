@@ -77,6 +77,35 @@ non_aa_descr %>%
   coord_flip()
 
 
+# 1.
+non_aa_samp %>% 
+  mutate(
+    in_moth_tongue = ( as.character(chlang) == as.character(lang_primary) )
+    ) %>% 
+  # count(region, in_moth_tongue) %>% 
+  group_by(region) %>% 
+  summarise( in_moth_tongue_prop = mean(in_moth_tongue, na.rm = TRUE) ) %>% 
+  ggplot(aes(fct_reorder(region, in_moth_tongue_prop), in_moth_tongue_prop)) +
+  geom_col() +
+  scale_y_continuous(labels = percent) +
+  labs(
+    x = "Region",
+    y = "",
+    title = "Percent of YL Children Ever Schooled in their Mother Tongue at Primary Level"
+  )
+
+# 2.
+
+top_code <- function(var, ceil) {
+  
+  out <- if_else( var > ceil, ceil, var )
+  
+  return(out)
+}
+
+
+
+
 # Table of Summary Statistics (Table I) ####
 non_aa_descr <- non_aa_samp %>% 
   mutate(
@@ -85,13 +114,21 @@ non_aa_descr <- non_aa_samp %>%
     stunted = (stunting == 1)
   ) %>% 
   select(
-    male, zbfa, stunted, caredu_r1, careage_r1, care_female, hhsize, 
+    male, zbfa, stunted, caredu_r1, careage_r1, care_woman = care_female, hhsize, 
     wi_new, hq_new, cd_new, elecq_new, ownlandhse_r1, region, raw_maths,
-    raw_lang, hghgrade_final_num, wage_employ, wage_employII
+    raw_lang, hghgrade_final_num, wage_employ, salary_employ = wage_employII, 
+    rural_3
   ) %>% 
   # filter(complete.cases(.)) %>%
   dummy_cols(c("region")) %>% 
-  select(-c(region))
+  select(-c(region)) %>% 
+  mutate(
+    rural_3 = as.logical(rural_3),
+    region_Amhara = as.logical(region_Amhara),
+    region_Oromia = as.logical(region_Oromia),
+    region_SNNP = as.logical(region_SNNP),
+    region_Tigray = as.logical(region_Tigray)
+  )
 
 
 aa_descr <- aa_samp %>% 
@@ -101,9 +138,9 @@ aa_descr <- aa_samp %>%
     stunted = (stunting == 1)
   ) %>% 
   select(
-    male, zbfa, stunted, caredu_r1, careage_r1, care_female, hhsize, 
+    male, zbfa, stunted, caredu_r1, careage_r1, care_woman = care_female, hhsize, 
     wi_new, hq_new, cd_new, elecq_new, ownlandhse_r1, raw_maths,
-    raw_lang, hghgrade_final_num, wage_employ, wage_employII
+    raw_lang, hghgrade_final_num, wage_employ, salary_employ = wage_employII
   ) #%>% 
   # filter(complete.cases(.)) 
 # %>% 
@@ -159,6 +196,73 @@ z$empty1 <- NA
 z <- select(z, empty0, variable, obs_nonaa, mean_nonaa, sd_nonaa, empty1, 
             obs_aa, mean_aa, sd_aa)
 
+z <- z %>% 
+  mutate(
+    variable = str_remove(
+      variable, "region_"
+    ),
+    variable = str_replace_all(
+      variable,
+      c(
+        "male" = "Dummy for male child",
+        "hghgrade_final_num" = "Highest grade completed",
+        "raw_maths" = "Maths test Score (Raw)",
+        "raw_lang" = "Language test Score (Raw)", 
+        "wage_employ" = "Dummy for wage Employment", 
+        "salary_employ" = "Dummy for salaried Employment",
+        "zbfa" = "BMI-for-age z-score",
+        "stunted" = "Dummy for stunting",
+        "care_woman" = "Dummy for female caregiver",
+        "careage_r1" = "Caregiver's age", 
+        "caredu_r1" = "Caregiver's highest grade", 
+        "hhsize" = "Household size", 
+        "wi_new" = "Wealth index", 
+        "hq_new" = "Housing quality index", 
+        "cd_new" = "Consumer durables index", 
+        "elecq_new" = "Household has access to electricity", 
+        "ownlandhse_r1" = "Household owns land where house is on",
+        "rural_3" = "Household resides in a rural area",
+        "Amhara" = "Dummy for Amhara",
+        "Oromia" = "Dummy for Oromia",
+        "SNNP" = "Dummy for SNNP",
+        "Tigray" = "Dummy for Tigray"
+      )
+    )
+  )  
+
+cols <- pull(z, "variable")
+
+cols_arrg <- c(
+  "Dummy for male child",
+  "Highest grade completed",
+  "Maths test Score (Raw)",
+  "Language test Score (Raw)", 
+  "Dummy for wage Employment", 
+  "Dummy for salaried Employment",
+  "BMI-for-age z-score",
+  "Dummy for stunting",
+  "Dummy for female caregiver",
+  "Caregiver's age", 
+  "Caregiver's highest grade", 
+  "Household size", 
+  "Wealth index", 
+  "Housing quality index", 
+  "Consumer durables index", 
+  "Household has access to electricity", 
+  "Household owns land where house is on",
+  "Household resides in a rural area",
+  "Dummy for Amhara",
+  "Dummy for Oromia",
+  "Dummy for SNNP",
+  "Dummy for Tigray"
+)
+
+z$variable <- factor(z$variable, levels = cols_arrg)
+z <- z[order(z$variable), ]
+row.names(z) <- NULL  # reset the rownames
+z$variable <- as.character( z$variable )
+
+
 xtab <- xtable(
   z, display = c("s", "s", "s", "g", "g", "g", "s", "g", "g", "g"),
   digits = 4, caption = "Summary Statistics", label = "tab:01"
@@ -170,7 +274,7 @@ comm <- paste0(" \n \\\\[-1.8ex] \\multicolumn{6}{l}",
 
 
 addtorow <- list()
-addtorow$pos <- list(0, 0, 0, 0, 0, 21, 21)
+addtorow$pos <- list(0, 0, 0, 0, 0, 22, 22)
 addtorow$command <- c(
   " \\\\[-1.8ex]",
   " & & \\multicolumn{3}{c}{Non AA Sample} & & \\multicolumn{3}{c}{AA Sample}  \\\\[0.2ex]",
@@ -195,8 +299,12 @@ print(
 )
 
 
+# Proportion of students who were schooled in their mother tongue
+# during primary school by region
 
-
-
+# correlation between IMTI/E_is and some outcome variables (eg. wage 
+# employment) by region
+  # E.g., modal value of IMTI/E_is vs. proportion of wage employed
+# 
 
 
