@@ -4,6 +4,17 @@
 
 # Figures and Descriptive Statistics
 
+rm(list = ls())
+
+# load the data:
+aa_samp <- read_csv("data/aa_samp.csv") %>% 
+  mutate_if(is.character, as.factor) %>% # convert all chr. to factor.
+  filter(raw_lang != 0) 
+
+non_aa_samp <- read_csv("data/non_aa_samp.csv") %>% 
+  mutate_if(is.character, as.factor) %>% # convert all chr. to factor.
+  filter(raw_lang != 0)   
+
 # Some descriptives:
 
 non_aa_samp %>% 
