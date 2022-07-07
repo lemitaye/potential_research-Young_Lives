@@ -107,8 +107,9 @@ non_aa_samp %>%
     std_maths = standardize(raw_maths),
     std_lang = standardize(raw_lang)
   ) %>% 
-  ggplot() +
-  geom_density(aes(std_lang)) +
+  pivot_longer(c(std_maths, std_lang), names_to = "test_type", values_to = "std_score") %>% 
+  ggplot(aes(color = test_type)) +
+  geom_density(aes(std_score)) +
   facet_wrap(~ region)
 
 # 3. Variation in wage & salary employment by region
@@ -118,8 +119,13 @@ non_aa_samp %>%
     salary_employ_pct = mean(wage_employII, na.rm = TRUE),
     wage_employ_pct = mean(wage_employ, na.rm = TRUE)
     ) %>% 
-  ggplot(aes(fct_reorder(region, wage_employ_pct), wage_employ_pct)) +
-  geom_col() + 
+  pivot_longer(
+    c(salary_employ_pct, wage_employ_pct), 
+    names_to = "employ_type", 
+    values_to = "pct_employ"
+    ) %>% 
+  ggplot(aes( fct_reorder(region, pct_employ), pct_employ, fill = employ_type)) +
+  geom_col(position = "dodge") + 
   scale_y_continuous(labels = percent) +
   coord_flip()
   
