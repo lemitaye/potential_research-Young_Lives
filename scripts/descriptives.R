@@ -94,14 +94,35 @@ non_aa_samp %>%
     title = "Percent of YL Children Ever Schooled in their Mother Tongue at Primary Level"
   )
 
-# 2.
+# 2. Distribution of test scores by region
+standardize <- function(x){ 
+  z <- (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE) 
+  return( z)
+  }
 
-top_code <- function(var, ceil) {
+non_aa_samp %>% 
+  select(region, raw_maths, raw_lang) %>% 
+  group_by(region) %>% 
+  summarise(
+    std_maths = standardize(raw_maths),
+    std_lang = standardize(raw_lang)
+  ) %>% 
+  ggplot() +
+  geom_density(aes(std_lang)) +
+  facet_wrap(~ region)
+
+# 3. Variation in wage & salary employment by region
+non_aa_samp %>% 
+  group_by(region) %>% 
+  summarise(
+    salary_employ_pct = mean(wage_employII, na.rm = TRUE),
+    wage_employ_pct = mean(wage_employ, na.rm = TRUE)
+    ) %>% 
+  ggplot(aes(fct_reorder(region, wage_employ_pct), wage_employ_pct)) +
+  geom_col() + 
+  scale_y_continuous(labels = percent) +
+  coord_flip()
   
-  out <- if_else( var > ceil, ceil, var )
-  
-  return(out)
-}
 
 
 
