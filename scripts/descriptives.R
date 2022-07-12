@@ -108,15 +108,15 @@ non_aa_samp %>%
     std_lang = standardize(raw_lang)
   ) %>% 
   pivot_longer(c(std_maths, std_lang), names_to = "test_type", values_to = "std_score") %>% 
-  ggplot(aes(color = test_type, linetype = test_type)) +
+  ggplot(aes(color = region, linetype = region)) +
   geom_density(aes(std_score)) +
-  facet_wrap(~ region) +
+  facet_wrap(~ test_type, scales = "free_y") +
   theme(legend.position = "top") +
   labs(
     x = "Standardized Score",
     y = "Density",
     color = "", linetype = "",
-    title = "Figure 1: Distribution of Standardized Test Scores by Region"
+    title = "Figure 2: Distribution of Standardized Test Scores by Region"
   )
 
 # 3. Variation in wage & salary employment by region
@@ -138,7 +138,7 @@ non_aa_samp %>%
   labs(
     x = "", y = "Percent Employed",
     fill = "Employment Type",
-    title = "Figure 2: Percentage of YL Pupils That Were Employed by Round 5"
+    title = "Figure 1: Percentage of YL Pupils That Were Employed by Round 5"
   )
   
 
