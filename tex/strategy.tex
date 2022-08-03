@@ -5,7 +5,63 @@ As described earlier, Oromia and Tigray implemented the 1994 language of instruc
 
 We exploit these differences in how the language of instruction policy was implemented in the four regional states, to assess the impact of mother tongue education on educational and labor market outcomes. Based on a conjecture that the policy-induced disparity in the \emph{intensity of mother tongue instruction} (iMTI) across different states might have resulted in differences in human capital accumulation and labor-market outcomes, an IV-2SLS empirical strategy is implemented to explore the research question under consideration.   
 
-Equation [1] is the key (2nd stage) regression equation, with the instrumental variable defined based on ethnicity as described below.
+Equation \eqref{eq:01} is the key (2nd stage) regression equation, with the instrumental variable defined based on ethnicity as described below.
+
+\begin{equation}\label{eq:01}
+	Y_{is} = \alpha + \beta\cdot I_{is} + X_{is}'\delta + \epsilon_{is}
+\end{equation}
+
+The outcome variables ($ Y_{is} $) are test scores (used as proxy for educational outcomes in the current study) and labor market outcomes for student $ i $ in state $ s $ in 2016, when the latest complete Young Lives Survey was conducted. Students test scores (measures of cognitive ability) are intermediate outcome variables\footnote{\textit{Say something about intermediate outcome variables}} through which iMTI is expected to influence labor market outcomes. We use two different test scores to capture variations in human capital accumulation by students schooled under the various regimes of education: the tests measure the students’ knowledge and aptitude in mathematics and verbal reasoning. Similarly, we measure labor market outcomes with two indicator variables – dummies for salary employment and wage employment – which are switched on if the subjects were employed when the latest survey was conducted in 2016.\footnote{According to the data compiled by the International Labor Organization, the percentage of the Ethiopian workforce with Salary and Wage employments is less than 20 percent, with the remainder identified as self-employed, some of whom might be severely underemployed or unemployed.}  
+
+The causal variable in the empirical model ($ I_{is} $) represents the intensity of mother tongue instruction for student $ i $ in state $ s $, and it is measured by the number of years students are schooled in their native tongues. It varies between zero and eight in Oromia and Tigray for students who studied in their native tongues.\footnote{Although education is compulsory for children between the ages of 5 to 16, many students drop out before completing elementary education due to a serious lack of enforcement of the national law.} Similarly, iMTI is at most six for Amhara students in the Amhara regional state, while it is less than or equal to four for students who are schooled in their native languages in their respective local school districts in the South.\footnote{There are more than fifty ethnic groups in the Southern Nations and Nationalities Region and the overwhelming majority of them have adopted MTI in their schools. Have the Gurage done so? If not, why not?} For students in the capital, Addis Ababa, whose mother tongue is Amharic, iMTI is at most six; for other students in the city, IMT is zero. For the \textit{Never Takers}, which constitute about \textit{3 percent} of the overall sample, IMT equals zero. 
+
+The sub-population of \textit{Never Takers} are those that are legally entitled by state law to acquire education in their mother tongues but choose to be educated in a different language. These are typically non-Amhara students who choose the Amharic stream in their own ethnic-homeland states for any number of reasons, including perhaps the expectation that learning in Amharic --- a well-established language --- might enhance their learning and economic outcomes later in life. The significant majority of \textit{Never Takers} are found in the Southern Nations and Nationalities Regional state, and they constitute about \textit{X percent} of the sample in the region.
+
+The vector of controls ($ X_{is}' $) are the students’ and their families’ characteristics that were determined in years prior to 2016 - variables that are widely understood to have some effect on the intermediate and final outcome variables: they include the students’ anthropomorphic measures when the students were eight, a measure of their stuntedness, a proxy for family poverty (the amount of food consumed by the students’ parental household), an index of family wealth, a measure of the caregiver’s education, family size, various indicators of asset ownership (including, land, house, and consumer durables), access to electricity, an indicator for urbanization, a dummy for the students’ gender, an indicator for school type (public vs. private), and a few other relevant variables. 
+
+\subsection{The Instrumental Variable (IV)}
+
+The instrumental variable $ E_{is} $, which is defined below in (2), represents the Ethnic background of student i attending primary school in regional state s. It is based on attribute of the students assigned by nature; thus, it is exogenously determined in the empirical model. It is an index variable, constructed based on a unique interaction of students’ ethnic backgrounds and the ethnicity-based states’ policies in which the students are schooled,\footnote{It bears repeating here that the Ethiopian states are defined based on the ethnic identity of their residents.} and is given by:
+
+\begin{equation}\label{eq:02}
+	E_{is} = \frac{N^{s}}{8}\cdot i^{M}
+\end{equation}
+
+$ N^{s} $ is the number of legally mandated years students may be educated in their mother-tongue in ethnic state $ s $, and $ i^{M} $ is an indicator variable that is switched on if student $ i $ has access to mother tongue education regardless of where he/she attended school. Whereas some Amhara students attending schools in certain school districts in Oromia and the South, and a segment of Oromo students attending schools in the Amhara state, have the options to be schooled in their native tongues; a significant majority of students attending schools outside their ethnic home states do not have the option of choosing their primary language of instruction. Consequently, $ i^{M} $ is switched on for a) all students attending schools in their native tongues in their ethnic home states; b) Amhara students who are offered the opportunity of learning in Amharic in some school districts in Oromia and the South;\footnote{Some of the urban school districts in Oromia and the Southern Nations and Nationalities Region offer schooling options in Amharic.} and c) Oromo students attending schools in the special zone of Oromia in the Amhara state.  
+
+Since the instrumental variable is constructed based on the ethnicity of the students and the language of instruction policies of the ethnic-based states in which they attend primary and middle schools, it is as good as randomly assigned and varies independently of test scores and job market outcomes. The only source of variation in the instrumental variable comes from a unique interaction of the students’ ethnic backgrounds and the educational policy of the state in which the students reside. Importantly, the IV generates statistically significant variation in the intensity of mother tongue instruction (the causal variable in the empirical model defined above), as demonstrated in section 4 below. 
+
+The validity of $ E_{is} $  as an instrumental variable also depends on the key assumption that the instrument affects educational and job market outcomes only through its effects on the intensity of mother tongue education. Hence, the identifying assumption fails if the instrumental variable affects educational and job market outcomes \textit{in samples where there is no obvious reason} for association between the causal and the outcome variables (Angrist, 1990). Finding that the IV has any effect on test scores and labor market outcomes in such a sample would nullify the exclusion restriction, casting serious doubts on our identification strategy. 
+
+If our identification strategy is to remain sound, we expect to see neither ethnicity nor the intensity of mother tongue instruction to have any effect on both human capital accumulation and job market outcomes in the Ethiopian capital, Addis Ababa. There is indeed no persuasive reason why --- conditional on the covariates included in our empirical model --- ethnicity, thus iMTI, would be the cause of differences in test scores and job market outcomes in Addis Ababa, since Amharic is the language of daily life and the primary language of instruction in primary schools in the city, and all students are proficient in the language regardless of their ethnic backgrounds. These students might use their native languages in their homes, but they use Amharic in their schools and their day-to-day social interactions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
