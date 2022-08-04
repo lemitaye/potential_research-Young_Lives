@@ -120,7 +120,7 @@ non_aa_samp %>%
   )
 
 # 3. Variation in wage & salary employment by region
-non_aa_samp %>% 
+employ_gr <- non_aa_samp %>% 
   group_by(region) %>% 
   summarise(
     salary_employ_pct = mean(wage_employII, na.rm = TRUE),
@@ -131,17 +131,33 @@ non_aa_samp %>%
     names_to = "employ_type", 
     values_to = "pct_employ"
     ) %>% 
+  mutate(
+    employ_type = factor(
+      employ_type, 
+      levels = c("salary_employ_pct", "wage_employ_pct") ) %>% 
+    fct_recode(
+         "Wage Employed" = "wage_employ_pct", "Salary Employed" = "salary_employ_pct"
+        )
+  ) %>% 
   ggplot(aes( fct_reorder(region, pct_employ), pct_employ, fill = employ_type)) +
   geom_col(position = "dodge") + 
   scale_y_continuous(labels = percent) +
   coord_flip() +
+  # theme(legend.position = "top") +
   labs(
     x = "", y = "Percent Employed",
-    fill = "Employment Type",
-    title = "Figure 1: Percentage of YL Pupils That Were Employed by Round 5"
+    fill = "Employment Type"#,
+    # title = "Figure 1: Percentage of YL Pupils That Were Employed by Round 5"
   )
   
-
+ggsave(
+  filename = "Young-Lives---Collaboration/figures/employ_gr.pdf",
+  plot = employ_gr,
+  device = cairo_pdf,
+  width = 200,
+  height = 120,
+  units = "mm"
+)
 
 
 
