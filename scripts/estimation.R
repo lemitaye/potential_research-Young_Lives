@@ -59,6 +59,23 @@ stargazer(
 
 waldtest(m1, ~ E_is)[["F"]]
 
+# Function to standardize test scores:
+standardize <- function(x){ 
+  z <- (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE) 
+  return( z)
+}
+
+aa_samp <- aa_samp %>% 
+  mutate(
+    std_maths = standardize(raw_maths),
+    std_lang = standardize(raw_lang)
+  )
+
+non_aa_samp <- non_aa_samp %>% 
+  mutate(
+    std_maths = standardize(raw_maths),
+    std_lang = standardize(raw_lang)
+  )
 
 # Reduced form for the AA sample:
 
@@ -67,15 +84,21 @@ f_rf2 <- make_formula_frst_stg("raw_maths", "E_is", added = "entype_r4 +")
 f_rf3 <- make_formula_frst_stg("raw_lang", "E_is", added = "entype_r4 +")
 f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "E_is", added = "entype_r4 +")
 f_rf5 <- make_formula_frst_stg("wage_employII", "E_is", added = "entype_r4 +")
+f_rf6 <- make_formula_frst_stg("std_maths", "E_is", added = "entype_r4 +")
+f_rf7 <- make_formula_frst_stg("std_lang", "E_is", added = "entype_r4 +")
 
 rf1aa <- lm(f_rf1, data = aa_samp, subset = (type_activ != 19))
 rf2aa <- lm(f_rf2, data = aa_samp, subset = (type_activ != 19))
 rf3aa <- lm(f_rf3, data = aa_samp, subset = (type_activ != 19))
 rf4aa <- lm(f_rf4, data = aa_samp, subset = (type_activ != 19))
 rf5aa <- lm(f_rf5, data = aa_samp, subset = (type_activ != 19))
+rf6aa <- lm(f_rf6, data = aa_samp, subset = (type_activ != 19))
+rf7aa <- lm(f_rf7, data = aa_samp, subset = (type_activ != 19))
 
 stargazer(
-  rf2aa, rf3aa, rf5aa ,rf1aa, 
+  # rf2aa, rf3aa, 
+  rf6aa, rf7aa,
+  rf5aa ,rf1aa, 
   keep = c("E_is"),
   type = "text",
   keep.stat = c("n","rsq")
@@ -119,6 +142,9 @@ fiv4 <- make_formula_iv("raw_lang", "E_is", added = NULL)
 fiv5 <- make_formula_iv("hghgrade_final_num", "E_is", added = NULL)
 fiv6 <- make_formula_iv("wage_employII", "E_is", added = NULL)
 fiv7 <- make_formula_iv("self_employII", "E_is", added = NULL)
+fiv8 <- make_formula_iv("std_maths", "E_is", added = NULL)
+fiv9 <- make_formula_iv("std_lang", "E_is", added = NULL)
+
 
 # Estimation for the Non-AA sample
 iv1 <- felm(fiv1, data = non_aa_samp)
@@ -128,10 +154,12 @@ iv4 <- felm(fiv4, data = non_aa_samp)
 iv5 <- felm(fiv5, data = non_aa_samp)
 iv6 <- felm(fiv6, data = non_aa_samp)
 iv7 <- felm(fiv7, data = non_aa_samp)
+iv8 <- felm(fiv8, data = non_aa_samp)
+iv9 <- felm(fiv9, data = non_aa_samp)
 
 stargazer(
-  # iv1, iv2,
-  iv3, iv4,
+  iv8, iv9,
+  # iv3, iv4,
   iv6, iv1,
   keep = c("IMTI"),
   keep.stat = c("n","rsq"),
@@ -146,6 +174,8 @@ fiv4aa <- make_formula_iv("raw_lang", "E_is", added = "entype_r4 +")
 fiv5aa <- make_formula_iv("hghgrade_final_num", "E_is", added = "entype_r4 +")
 fiv6aa <- make_formula_iv("wage_employII", "E_is", added = "entype_r4 +")
 fiv7aa <- make_formula_iv("self_employII", "E_is", added = "entype_r4 +")
+fiv8aa <- make_formula_iv("std_maths", "E_is", added = "entype_r4 +")
+fiv9aa <- make_formula_iv("std_lang", "E_is", added = "entype_r4 +")
 
 iv1aa <- felm(fiv1aa, data = aa_samp, subset = (type_activ != 19))
 # iv2aa <- felm(fiv2, data = aa_samp)  # has rank problems
@@ -154,10 +184,12 @@ iv4aa <- felm(fiv4aa, data = aa_samp, subset = (type_activ != 19))
 iv5aa <- felm(fiv5aa, data = aa_samp, subset = (type_activ != 19))
 iv6aa <- felm(fiv6aa, data = aa_samp, subset = (type_activ != 19))
 iv7aa <- felm(fiv7aa, data = aa_samp, subset = (type_activ != 19))
+iv8aa <- felm(fiv8aa, data = aa_samp, subset = (type_activ != 19))
+iv9aa <- felm(fiv9aa, data = aa_samp, subset = (type_activ != 19))
 
 stargazer(
-  # iv1aa, iv2aa, 
-  iv3aa, iv4aa,
+  iv8aa, iv9aa,
+  # iv3aa, iv4aa,
   iv6aa, iv1aa,
   keep = c("IMTI"),
   keep.stat = c("n","rsq"),
@@ -213,6 +245,12 @@ f_rf4 <- make_formula_frst_stg("hghgrade_final_num", "Tigray"
 f_rf5 <- make_formula_frst_stg("wage_employII", "Tigray"
                                , added = "IMTI + ownlandhse_r1 + rural_3 +"
                                )
+f_rf6 <- make_formula_frst_stg("std_maths", "Tigray"
+                               , added = "IMTI + ownlandhse_r1 + rural_3 +"
+)
+f_rf7 <- make_formula_frst_stg("std_lang", "Tigray"
+                               , added = "IMTI + ownlandhse_r1 + rural_3 +"
+)
 
 # Tigray vs. Oromia
 rf1ot <- lm(f_rf1, data = orom.tig)
@@ -220,9 +258,13 @@ rf2ot <- lm(f_rf2, data = orom.tig)
 rf3ot <- lm(f_rf3, data = orom.tig, subset = (match == 1) )
 rf4ot <- lm(f_rf4, data = orom.tig)
 rf5ot <- lm(f_rf5, data = orom.tig)
+rf6ot <- lm(f_rf6, data = orom.tig)
+rf7ot <- lm(f_rf7, data = orom.tig, subset = (match == 1) )
 
 stargazer(
-  rf2ot, rf3ot, rf5ot ,rf1ot, 
+  # rf2ot, rf3ot,
+  rf6ot, rf7ot,
+  rf5ot ,rf1ot, 
   keep = c("T"),
   keep.stat = c("n","rsq"),
   type = "text"
