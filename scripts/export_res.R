@@ -119,13 +119,13 @@ ot_rob <- stargazer(
   rf6ot, rf7ot, rf5ot ,rf1ot, 
   keep = c("T"),
   keep.stat = c("n","rsq"),
-  dep.var.labels = c("Maths", "Language", "Wage", "Wage"),
+  dep.var.labels = c("Maths", "Language", "Wage", "Salary"),
   title = "Robustness Check: Oromia vs. Tigray"
 )
 
 tabV <- star_insert_row(ot_rob,
                          c(
-                           " & Score & Score & Employ I & Employ II \\\\"
+                           " & Z-score & Z-score & Employed & Employed \\\\"
                          ),
                          insert.after = c(12)
 )
