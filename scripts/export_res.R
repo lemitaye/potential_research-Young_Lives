@@ -15,7 +15,8 @@ first <- stargazer(
   column.labels = c("Maths", "Language", "Wage", "Salary"),
   dep.var.labels = "",
   covariate.labels = "$E_{is}$",
-  title = "Estimates Excluding the Addis Ababa Sample"
+  title = "Estimates Excluding the Addis Ababa Sample",
+  label = "tab:mainreg"
   # ,type = "text"
 )
 
@@ -39,6 +40,9 @@ tabII <- star_panel(
     " & Z-core & Z-core & Employed & Employed \\\\"
   ),
   insert.after = c(13)
+) %>% star_notes_tex(
+  note.type = "threeparttable",
+  note = "Standard errors are in parentheses. *** Significant at 1\\%, ** Significant at 5\\%, * Significant at 10\\%."
 )
 
 star_tex_write(tabII,
@@ -59,7 +63,8 @@ first_aa <- stargazer(
   column.labels = c("Maths", "Language", "Wage", "Salary"),
   dep.var.labels = "",
   covariate.labels = "$E_{is}$",
-  title = "Estimates for Addis Ababa Sample"
+  title = "Estimates for Addis Ababa Sample",
+  label = "tab:aareg"
   # ,type = "text"
 )
 
@@ -83,6 +88,9 @@ tabIII <- star_panel(
     " & Z-score & Z-score & Employed & Employed \\\\"
   ),
   insert.after = c(13)
+) %>% star_notes_tex(
+  note.type = "threeparttable",
+  note = "Standard errors are in parentheses. *** Significant at 1\\%, ** Significant at 5\\%, * Significant at 10\\%."
 )
 
 star_tex_write(tabIII, 
@@ -99,7 +107,8 @@ rfaa <- stargazer(
   # column.labels = c("Maths", "Language", "Highest", "Wage", "Wage"),
   dep.var.labels = c("Maths", "Language", "Wage", "Salary"),
   covariate.labels = "$E_{is}$",
-  title = "Reduced Form Estimates for Addis Ababa Sample"
+  title = "Reduced Form Estimates for Addis Ababa Sample",
+  label = "tab:aared"
 )
 
 tabIV <- star_insert_row(rfaa,
@@ -107,6 +116,9 @@ tabIV <- star_insert_row(rfaa,
     " & Z-score & Z-score & Employed & Employed \\\\"
   ),
   insert.after = c(12)
+) %>% star_notes_tex(
+  note.type = "threeparttable",
+  note = "Standard errors are in parentheses. *** Significant at 1\\%, ** Significant at 5\\%, * Significant at 10\\%."
 )
 
 star_tex_write(tabIV, 
@@ -120,7 +132,8 @@ ot_rob <- stargazer(
   keep = c("T"),
   keep.stat = c("n","rsq"),
   dep.var.labels = c("Maths", "Language", "Wage", "Salary"),
-  title = "Robustness Check: Oromia vs. Tigray"
+  title = "Robustness Check: Oromia vs. Tigray",
+  label = "tab:oromtig"
 )
 
 tabV <- star_insert_row(ot_rob,
@@ -128,6 +141,9 @@ tabV <- star_insert_row(ot_rob,
                            " & Z-score & Z-score & Employed & Employed \\\\"
                          ),
                          insert.after = c(12)
+) %>% star_notes_tex(
+  note.type = "threeparttable",
+  note = "Standard errors are in parentheses. *** Significant at 1\\%, ** Significant at 5\\%, * Significant at 10\\%."
 )
 
 star_tex_write(tabV, 

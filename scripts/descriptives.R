@@ -320,7 +320,7 @@ z$variable <- as.character( z$variable )
 
 xtab <- xtable(
   z, display = c("s", "s", "s", "g", "g", "g", "s", "g", "g", "g"),
-  digits = 4, caption = "Summary Statistics", label = "tab:01"
+  digits = 4, caption = "Summary Statistics", label = "tab:sum-stat"
 ) 
 
 comm <- paste0(" \n \\\\[-1.8ex] \\multicolumn{6}{l}",
@@ -350,7 +350,7 @@ print(
   include.rownames = FALSE, include.colnames = FALSE, 
   booktabs = TRUE, caption.placement = "top", 
   hline.after = c(-1, 0),
-  file = "tex/tables/tableI.tex" 
+  file = "Young-Lives---Collaboration/tables/tableI.tex" 
 )
 
 
