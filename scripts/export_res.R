@@ -34,10 +34,10 @@ tabII <- star_panel(
   first, iv,
   same.summary.stats = TRUE, 
   panel.label.fontface = "bold",
-  panel.names = c("First Stage$^{\\dag}$", "2SLS$^{\\ddag}$")
+  panel.names = c("First Stage", "2SLS")
 ) %>% star_insert_row(
   c(
-    " & Z-core & Z-core & Employed & Employed \\\\"
+    " & Z-score & Z-score & Employed & Employed \\\\"
   ),
   insert.after = c(13)
 ) %>% star_notes_tex(
@@ -56,14 +56,15 @@ star_tex_write(tabII,
 
 first_aa <- stargazer(
   # iv1, iv2,
-  iv3aa$stage1, iv4aa$stage1, #iv5aa$stage1,
-  iv6aa$stage1, iv1aa$stage1,
+  # iv3aa$stage1, iv4aa$stage1, #iv5aa$stage1,
+  # iv6aa$stage1, iv1aa$stage1,
+  rf6aa, rf7aa, rf5aa, rf1aa,
   keep = c("E_is"),
   keep.stat = c("n"),
-  column.labels = c("Maths", "Language", "Wage", "Salary"),
-  dep.var.labels = "",
+  # column.labels = c("Maths", "Language", "Wage", "Salary"),
+  dep.var.labels = c("Maths", "Language", "Wage", "Salary"),
   covariate.labels = "$E_{is}$",
-  title = "Estimates for Addis Ababa Sample",
+  title = "Results for the Addis Ababa Sample",
   label = "tab:aareg"
   # ,type = "text"
 )
@@ -82,12 +83,12 @@ tabIII <- star_panel(
   first_aa, iv_aa,
   same.summary.stats = TRUE, 
   panel.label.fontface = "bold",
-  panel.names = c("First Stage$^{\\dag}$", "2SLS$^{\\ddag}$")
+  panel.names = c("Reduced Form", "2SLS")
 ) %>% star_insert_row(
   c(
     " & Z-score & Z-score & Employed & Employed \\\\"
   ),
-  insert.after = c(13)
+  insert.after = c(12)
 ) %>% star_notes_tex(
   note.type = "threeparttable",
   note = "Standard errors are in parentheses. *** Significant at 1\\%, ** Significant at 5\\%, * Significant at 10\\%."
@@ -99,37 +100,37 @@ star_tex_write(tabIII,
 
 ## Reduced form for the AA sample ####
 
-rfaa <- stargazer(
-  rf6aa, rf7aa, rf5aa, rf1aa,
-  keep = c("E_is"),
-  # type = "text",
-  keep.stat = c("n","rsq"),
-  # column.labels = c("Maths", "Language", "Highest", "Wage", "Wage"),
-  dep.var.labels = c("Maths", "Language", "Wage", "Salary"),
-  covariate.labels = "$E_{is}$",
-  title = "Reduced Form Estimates for Addis Ababa Sample",
-  label = "tab:aared"
-)
-
-tabIV <- star_insert_row(rfaa,
-  c(
-    " & Z-score & Z-score & Employed & Employed \\\\"
-  ),
-  insert.after = c(12)
-) %>% star_notes_tex(
-  note.type = "threeparttable",
-  note = "Standard errors are in parentheses. *** Significant at 1\\%, ** Significant at 5\\%, * Significant at 10\\%."
-)
-
-star_tex_write(tabIV, 
-               file = "Young-Lives---Collaboration/tables/tableIV.tex")
+# rfaa <- stargazer(
+#   rf6aa, rf7aa, rf5aa, rf1aa,
+#   keep = c("E_is"),
+#   # type = "text",
+#   keep.stat = c("n","rsq"),
+#   # column.labels = c("Maths", "Language", "Highest", "Wage", "Wage"),
+#   dep.var.labels = c("Maths", "Language", "Wage", "Salary"),
+#   covariate.labels = "$E_{is}$",
+#   title = "Reduced Form Estimates for Addis Ababa Sample",
+#   label = "tab:aared"
+# )
+# 
+# tabIV <- star_insert_row(rfaa,
+#   c(
+#     " & Z-score & Z-score & Employed & Employed \\\\"
+#   ),
+#   insert.after = c(12)
+# ) %>% star_notes_tex(
+#   note.type = "threeparttable",
+#   note = "Standard errors are in parentheses. *** Significant at 1\\%, ** Significant at 5\\%, * Significant at 10\\%."
+# )
+# 
+# star_tex_write(tabIV, 
+#                file = "Young-Lives---Collaboration/tables/tableIV.tex")
 
 
 # Robustness Check (Oromia vs. Tigray) ####
 
 ot_rob <- stargazer(
   rf6ot, rf7ot, rf5ot ,rf1ot, 
-  keep = c("T"),
+  keep = c("Tigray"),
   keep.stat = c("n","rsq"),
   dep.var.labels = c("Maths", "Language", "Wage", "Salary"),
   title = "Robustness Check: Oromia vs. Tigray",
