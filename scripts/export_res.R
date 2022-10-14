@@ -151,7 +151,50 @@ star_tex_write(tabV,
                file = "Young-Lives---Collaboration/tables/tableV.tex")
 
 
+# Regression for the non-Amhara sample (Non-AA Sample) ####
 
+first_nonAm <- stargazer(
+  # iv1, iv2,
+  iv8$stage1, iv9$stage1, #iv5$stage1,
+  iv6$stage1, iv1$stage1,
+  keep = c("E_is"),
+  keep.stat = c("n"),
+  column.labels = c("Maths", "Language", "Wage", "Salary"),
+  dep.var.labels = "",
+  covariate.labels = "$E_{is}$",
+  title = "Estimates Excluding the Addis Ababa Sample",
+  label = "tab:mainreg"
+  # ,type = "text"
+)
+
+iv_nonAm <- stargazer(
+  # iv1, iv2,
+  iv8_nonAm, iv9_nonAm, #iv5,
+  iv6_nonAm, iv1_nonAm,
+  keep = c("IMTI"),
+  keep.stat = c("n"),
+  covariate.labels = "IMTI"
+  # ,type = "text"
+)
+
+tabVI <- star_panel(
+  first_nonAm, iv_nonAm,
+  same.summary.stats = TRUE, 
+  panel.label.fontface = "bold",
+  panel.names = c("First Stage", "2SLS")
+) %>% star_insert_row(
+  c(
+    " & Z-score & Z-score & Employed & Employed \\\\"
+  ),
+  insert.after = c(13)
+) %>% star_notes_tex(
+  note.type = "threeparttable",
+  note = "Standard errors are in parentheses. *** Significant at 1\\%, ** Significant at 5\\%, * Significant at 10\\%."
+)
+
+star_tex_write(tabVI,
+               file = "Young-Lives---Collaboration/tables/tableII.tex"
+)
 
 
 

@@ -166,6 +166,17 @@ stargazer(
   type = "text"
 )
 
+# Estimation excluding the Amhara sample
+iv1_nonAm <- felm(fiv1, data = non_aa_samp %>% filter(region != "Amhara"))
+iv2_nonAm <- felm(fiv2, data = non_aa_samp %>% filter(region != "Amhara"))
+iv3_nonAm <- felm(fiv3, data = non_aa_samp %>% filter(region != "Amhara"))
+iv4_nonAm <- felm(fiv4, data = non_aa_samp %>% filter(region != "Amhara"))
+iv5_nonAm <- felm(fiv5, data = non_aa_samp %>% filter(region != "Amhara"))
+iv6_nonAm <- felm(fiv6, data = non_aa_samp %>% filter(region != "Amhara"))
+iv7_nonAm <- felm(fiv7, data = non_aa_samp %>% filter(region != "Amhara"))
+iv8_nonAm <- felm(fiv8, data = non_aa_samp %>% filter(region != "Amhara"))
+iv9_nonAm <- felm(fiv9, data = non_aa_samp %>% filter(region != "Amhara"))
+
 # Estimation for the AA sample
 fiv1aa <- make_formula_iv("wage_employ", "E_is", added = "entype_r4 +")
 fiv2aa <- make_formula_iv("self_employ", "E_is", added = "entype_r4 +")
