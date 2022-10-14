@@ -155,15 +155,15 @@ star_tex_write(tabV,
 
 first_nonAm <- stargazer(
   # iv1, iv2,
-  iv8$stage1, iv9$stage1, #iv5$stage1,
-  iv6$stage1, iv1$stage1,
+  iv8_nonAm$stage1, iv9_nonAm$stage1, #iv5$stage1,
+  iv6_nonAm$stage1, iv1_nonAm$stage1,
   keep = c("E_is"),
   keep.stat = c("n"),
   column.labels = c("Maths", "Language", "Wage", "Salary"),
   dep.var.labels = "",
   covariate.labels = "$E_{is}$",
-  title = "Estimates Excluding the Addis Ababa Sample",
-  label = "tab:mainreg"
+  title = "Estimates Excluding the Region of Amhara (Non-Addis Ababa Sample)",
+  label = "tab:nonAm"
   # ,type = "text"
 )
 
@@ -193,7 +193,7 @@ tabVI <- star_panel(
 )
 
 star_tex_write(tabVI,
-               file = "Young-Lives---Collaboration/tables/tableII.tex"
+               file = "Young-Lives---Collaboration/tables/tableVI.tex"
 )
 
 
