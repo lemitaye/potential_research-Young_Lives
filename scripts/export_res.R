@@ -15,7 +15,7 @@ first <- stargazer(
   column.labels = c("Maths", "Language", "Wage", "Salary"),
   dep.var.labels = "",
   covariate.labels = "$E_{is}$",
-  title = "Estimates Excluding the Addis Ababa Sample",
+  title = "Main Results",
   label = "tab:mainreg"
   # ,type = "text"
 )
@@ -64,7 +64,7 @@ first_aa <- stargazer(
   # column.labels = c("Maths", "Language", "Wage", "Salary"),
   dep.var.labels = c("Maths", "Language", "Wage", "Salary"),
   covariate.labels = "$E_{is}$",
-  title = "Results for the Addis Ababa Sample",
+  title = "Estimates for Addis Ababa",
   label = "tab:aareg"
   # ,type = "text"
 )
@@ -133,7 +133,7 @@ ot_rob <- stargazer(
   keep = c("Tigray"),
   keep.stat = c("n","rsq"),
   dep.var.labels = c("Maths", "Language", "Wage", "Salary"),
-  title = "Robustness Check: Oromia vs. Tigray",
+  title = "Comparing Estimate for Tigray and Oromia",
   label = "tab:oromtig"
 )
 
@@ -162,7 +162,7 @@ first_nonAm <- stargazer(
   column.labels = c("Maths", "Language", "Wage", "Salary"),
   dep.var.labels = "",
   covariate.labels = "$E_{is}$",
-  title = "Estimates Excluding the Region of Amhara (Non-Addis Ababa Sample)",
+  title = "Estimates Excluding the Amhara",
   label = "tab:nonAm"
   # ,type = "text"
 )
