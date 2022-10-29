@@ -283,27 +283,27 @@ stargazer(
 
 
 
-orom.snnp <- non_aa_samp %>% 
-  filter(region %in% c("Oromia", "SNNP")) %>% 
-  mutate( T = (region == "Oromia") )
-
-orom.amh <- non_aa_samp %>% 
-  filter(region %in% c("Oromia", "Amhara")) %>% 
-  mutate( T = (region == "Amhara") )
-
-# SNNP vs. Oromia
-rf1os <- lm(f_rf1, data = orom.snnp)
-rf2os <- lm(f_rf2, data = orom.snnp)
-rf3os <- lm(f_rf3, data = orom.snnp)
-rf4os <- lm(f_rf4, data = orom.snnp)
-rf5os <- lm(f_rf5, data = orom.snnp)
-
-stargazer(
-  rf2os, rf3os, rf4os, rf5os ,rf1os, 
-  keep = c("T"),
-  keep.stat = c("n","rsq"),
-  type = "text"
-)
+# orom.snnp <- non_aa_samp %>% 
+#   filter(region %in% c("Oromia", "SNNP")) %>% 
+#   mutate( T = (region == "Oromia") )
+# 
+# orom.amh <- non_aa_samp %>% 
+#   filter(region %in% c("Oromia", "Amhara")) %>% 
+#   mutate( T = (region == "Amhara") )
+# 
+# # SNNP vs. Oromia
+# rf1os <- lm(f_rf1, data = orom.snnp)
+# rf2os <- lm(f_rf2, data = orom.snnp)
+# rf3os <- lm(f_rf3, data = orom.snnp)
+# rf4os <- lm(f_rf4, data = orom.snnp)
+# rf5os <- lm(f_rf5, data = orom.snnp)
+# 
+# stargazer(
+#   rf2os, rf3os, rf4os, rf5os ,rf1os, 
+#   keep = c("T"),
+#   keep.stat = c("n","rsq"),
+#   type = "text"
+# )
 
 # Amhara vs. Oromia
 rf1oa <- lm(f_rf1, data = orom.amh)
@@ -358,10 +358,82 @@ oromia <- orom.tig %>%
 lm(raw_lang ~ match, data = oromia) %>% summary()
 
 
+# Analyzing joined younger cohort data: ####
+
+schsur_yl_joined <- read_csv("data/schsur_yl_joined.csv")
+
+schsur_yl_aa <- schsur_yl_joined %>% 
+  filter(region == "Addis Ababa")
+
+# Estimation for the AA sample
+
+iv3aa_yc <- felm(
+  formula = maths_score_w2 ~ entype_r4 + chsex + zbfa + stunting + caredu_r1 + 
+    careage_r1 + hhsize + wi_new + hq_new + 
+    cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3) | 
+    0 | (IMTI ~ E_is), 
   
+  data = schsur_yl_aa
+  )
 
 
+iv4aa_yc <- felm(
+  formula = literacy_score_w2 ~ entype_r4 + chsex + zbfa + stunting + caredu_r1 + 
+    careage_r1 + hhsize + wi_new + hq_new + 
+    cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3) | 
+    0 | (IMTI ~ E_is), 
+  
+  data = schsur_yl_aa
+  )
 
+stargazer(
+  iv3aa_yc, iv4aa_yc,
+  keep = c("IMTI"),
+  keep.stat = c("n","rsq"),
+  type = "text"
+)
+
+stargazer(
+  iv3aa_yc$stage1, iv4aa_yc$stage1, 
+  keep = c("E_is"),
+  keep.stat = c("n"),
+  type = "text"
+)
+
+# using yl cognitive scores:
+iv5aa_yc <- felm(
+  formula = math_score ~ entype_r4 + chsex + zbfa + stunting + caredu_r1 + 
+    careage_r1 + hhsize + wi_new + hq_new + 
+    cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3) | 
+    0 | (IMTI ~ E_is), 
+  
+  data = schsur_yl_aa
+)
+
+
+iv6aa_yc <- felm(
+  formula = verbal_score ~ entype_r4 + chsex + zbfa + stunting + caredu_r1 + 
+    careage_r1 + hhsize + wi_new + hq_new + 
+    cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3) | 
+    0 | (IMTI ~ E_is), 
+  
+  data = schsur_yl_aa
+)
+
+
+stargazer(
+  iv5aa_yc, iv6aa_yc,
+  keep = c("IMTI"),
+  keep.stat = c("n","rsq"),
+  type = "text"
+)
+
+stargazer(
+  iv5aa_yc$stage1, iv6aa_yc$stage1, 
+  keep = c("E_is"),
+  keep.stat = c("n"),
+  type = "text"
+)
 
 
 
