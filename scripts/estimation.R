@@ -362,8 +362,19 @@ lm(raw_lang ~ match, data = oromia) %>% summary()
 
 schsur_yl_joined <- read_csv("data/schsur_yl_joined.csv")
 
+yl_yc <- read_csv("data/ylsample_yc.csv")
+
 schsur_yl_aa <- schsur_yl_joined %>% 
-  filter(region == "Addis Ababa")
+  filter(region == "Addis Ababa") %>% 
+  mutate(std_math = standardize(math_score),
+         std_verbal = standardize(verbal_score),
+         std_math_schsurv = standardize(maths_score_w2 ),
+         std_literacy_schsurv = standardize(literacy_score_w2))
+
+yl_yc_aa <- yl_yc %>% 
+  filter(region == "Addis Ababa") %>% 
+  mutate(std_math = standardize(math_score),
+         std_verbal = standardize(verbal_score))
 
 # Estimation for the AA sample
 
@@ -403,7 +414,7 @@ stargazer(
 # using yl cognitive scores:
 iv5aa_yc <- felm(
   formula = math_score ~ entype_r4 + chsex + zbfa + stunting + caredu_r1 + 
-    careage_r1 + hhsize + wi_new + hq_new + 
+    careage_r1 + hhsize + wi_new + hq_new +
     cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3) | 
     0 | (IMTI ~ E_is), 
   
@@ -434,6 +445,60 @@ stargazer(
   keep.stat = c("n"),
   type = "text"
 )
+
+
+# Reduced form
+
+iv5aa_yc_rf <- felm(
+  formula = std_math ~ E_is + entype_r4 + chsex + zbfa + stunting + caredu_r1 + 
+    careage_r1 + hhsize + wi_new + hq_new +  
+    cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3), 
+  
+  data = schsur_yl_aa
+)
+
+iv6aa_yc_rf <- felm(
+  formula = std_verbal ~ E_is + entype_r4 + chsex + zbfa + stunting + caredu_r1 + 
+    careage_r1 + hhsize + wi_new + hq_new +  
+    cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3), 
+  
+  data = schsur_yl_aa
+)
+
+stargazer(
+  iv5aa_yc_rf, iv6aa_yc_rf,
+  keep = c("E_is"),
+  keep.stat = c("n","rsq"),
+  type = "text"
+)
+
+# using school survey test score
+
+iv3aa_yc_rf <- felm(
+  formula = std_math_schsurv ~ E_is + entype_r4 + chsex + zbfa + stunting + caredu_r1 + 
+    careage_r1 + hhsize + wi_new + hq_new + 
+    cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3), 
+  
+  data = schsur_yl_aa
+)
+
+iv4aa_yc_rf <- felm(
+  formula = std_literacy_schsurv ~ E_is + entype_r4 + chsex + zbfa + stunting + caredu_r1 + 
+    careage_r1 + hhsize + wi_new + hq_new + 
+    cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3), 
+  
+  data = schsur_yl_aa
+)
+
+stargazer(
+  iv3aa_yc_rf, iv4aa_yc_rf,
+  keep = c("E_is"),
+  keep.stat = c("n","rsq"),
+  type = "text"
+)
+
+
+
 
 
 
