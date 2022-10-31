@@ -580,18 +580,18 @@ calculate_score <- function(tbl, var_start, var_end) {
       TRUE ~ NaN
     )) %>% 
     group_by(schlid, classid, pupilid, ylchild, childid) %>% 
-    summarize(score = sum(result), .groups = "drop")
+    summarize(score = sum(result, na.rm = TRUE), .groups = "drop")
   
 }
 
-w1_math_score <- pupil_joined %>% 
+w1_math_score <- pupil_wave1 %>% 
   select(
     schlid, classid, pupilid, ylchild, childid, cmcorr01:cmcorr25
     ) %>% 
   calculate_score(cmcorr01, cmcorr25) %>% 
   rename(maths_score_w1 = score)
 
-w1_literacy_score <- pupil_joined %>% 
+w1_literacy_score <- pupil_wave1 %>% 
   select(
     schlid, classid, pupilid, ylchild, childid, cvcorr01:cvcorr25
   ) %>% 

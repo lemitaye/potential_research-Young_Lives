@@ -1,0 +1,83 @@
+---
+title: "Analyzing joined younger cohort data"
+author: "Lemi Daba"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+library(stargazer)
+library(lfe)
+theme_set(theme_light())
+
+yl_yc <- read_csv("../data/ylsample_yc.csv")
+
+standardize <- function(x){ 
+  z <- (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE) 
+  return( z)
+}
+
+yl_yc_aa <- yl_yc %>% 
+  filter(region == "Addis Ababa") %>% 
+  mutate(std_math = standardize(math_score),
+         std_verbal = standardize(verbal_score))
+
+```
+
+```{r}
+
+ggplot(yl_yc_aa, aes(std_math)) +
+  geom_histogram(fill = "blue", alpha = .5) +
+  scale_x_continuous(breaks = seq(-3, 3, by = 0.5)) +
+  labs(x = "Standardized Math Score",
+       y = "Count")
+
+```
+
+
+
+## using yl cognitive scores:
+
+```{r}
+
+# Reduced form
+
+iv5aa_yc_rf <- felm(
+  formula = std_math ~ E_is + entype_r4 + chsex + zbfa + stunting + caredu_r1 + 
+    careage_r1 + hhsize + wi_new + hq_new +  
+    cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3), 
+  
+  data = filter(yl_yc_aa, std_math < 2.25)
+)
+
+iv6aa_yc_rf <- felm(
+  formula = std_verbal ~ E_is + entype_r4 + chsex + zbfa + stunting + caredu_r1 + 
+    careage_r1 + hhsize + wi_new + hq_new +  
+    cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3), 
+  
+  data = filter(yl_yc_aa, std_math < 2.25)
+)
+
+stargazer(
+  iv5aa_yc_rf, iv6aa_yc_rf,
+  keep = c("E_is"),
+  keep.stat = c("n","rsq"),
+  type = "text"
+)
+
+```
+
+```{r}
+
+summary(iv5aa_yc_rf)
+
+```
+

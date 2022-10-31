@@ -418,7 +418,7 @@ iv5aa_yc <- felm(
     cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3) | 
     0 | (IMTI ~ E_is), 
   
-  data = schsur_yl_aa
+  data = filter(yl_yc_aa, std_math < 3)
 )
 
 
@@ -428,7 +428,7 @@ iv6aa_yc <- felm(
     cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3) | 
     0 | (IMTI ~ E_is), 
   
-  data = schsur_yl_aa
+  data = filter(yl_yc_aa, std_math < 3)
 )
 
 
@@ -454,7 +454,7 @@ iv5aa_yc_rf <- felm(
     careage_r1 + hhsize + wi_new + hq_new +  
     cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3), 
   
-  data = schsur_yl_aa
+  data = filter(yl_yc_aa, std_math < 2.25)
 )
 
 iv6aa_yc_rf <- felm(
@@ -462,7 +462,7 @@ iv6aa_yc_rf <- felm(
     careage_r1 + hhsize + wi_new + hq_new +  
     cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3), 
   
-  data = schsur_yl_aa
+  data = filter(yl_yc_aa, std_math < 2.25)
 )
 
 stargazer(
@@ -496,6 +496,34 @@ stargazer(
   keep.stat = c("n","rsq"),
   type = "text"
 )
+
+
+ggplot(yl_yc_aa, aes(std_math)) +
+  geom_histogram(fill = "blue", alpha = .5) +
+  scale_x_continuous(breaks = seq(-3, 3, by = 0.5)) +
+  labs(x = "Standardized Math Score",
+       y = "Count")
+
+ggplot(yl_yc_aa, aes(std_verbal)) +
+  geom_histogram() +
+  scale_x_continuous(breaks = -3:3)
+
+ggplot(yl_yc_aa, aes(std_math)) +
+  geom_boxplot() +
+  scale_x_continuous(breaks = seq(-3, 3, by = 0.5))
+
+yl_yc_aa %>% 
+  filter(std_math > 3)
+  
+yl_yc_aa %>% 
+  filter(std_math < 2.25) %>% 
+  ggplot(aes(std_math)) +
+  geom_histogram() +
+  geom_histogram(data = filter(yl_yc_aa, std_math > 2.25)) +
+  scale_x_continuous(breaks = -3:3)  
+  
+  
+
 
 
 
