@@ -418,7 +418,7 @@ iv5aa_yc <- felm(
     cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3) | 
     0 | (IMTI ~ E_is), 
   
-  data = filter(yl_yc_aa, std_math < 3)
+  data = filter(yl_yc_aa, std_math < 2.25)
 )
 
 
@@ -428,7 +428,7 @@ iv6aa_yc <- felm(
     cd_new + elecq_new + ownlandhse_r1 + factor(foodsec_r3) | 
     0 | (IMTI ~ E_is), 
   
-  data = filter(yl_yc_aa, std_math < 3)
+  data = filter(yl_yc_aa, std_math < 2.25)
 )
 
 

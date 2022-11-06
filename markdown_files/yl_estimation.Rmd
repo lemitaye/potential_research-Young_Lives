@@ -8,7 +8,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -32,19 +32,32 @@ yl_yc_aa <- yl_yc %>%
 
 ```
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 
 ggplot(yl_yc_aa, aes(std_math)) +
   geom_histogram(fill = "blue", alpha = .5) +
   scale_x_continuous(breaks = seq(-3, 3, by = 0.5)) +
   labs(x = "Standardized Math Score",
-       y = "Count")
+       y = "Count",
+       title = "Histogram of Standardized Math Score")
+
+```
+
+
+```{r message=FALSE, warning=FALSE}
+
+ggplot(yl_yc_aa, aes(std_verbal)) +
+  geom_histogram(fill = "blue", alpha = .5) +
+  scale_x_continuous(breaks = seq(-3, 3, by = 0.5)) +
+  labs(x = "Standardized Verbal Score",
+       y = "Count",
+       title = "Histogram of Standardized Verbal Score")
 
 ```
 
 
 
-## using yl cognitive scores:
+## reduced form regression result after removing outliers:
 
 ```{r}
 
