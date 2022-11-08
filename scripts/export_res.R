@@ -55,14 +55,13 @@ star_tex_write(tabII,
 ## First stages and IV for the AA sample ####
 
 first_aa <- stargazer(
-  # iv1, iv2,
-  # iv3aa$stage1, iv4aa$stage1, #iv5aa$stage1,
-  # iv6aa$stage1, iv1aa$stage1,
-  rf6aa, rf7aa, rf5aa, rf1aa,
+  rf6aa, rf7aa, rf5aa, rf1aa, iv5aa_yc_rf, iv6aa_yc_rf,
   keep = c("E_is"),
   keep.stat = c("n"),
-  # column.labels = c("Maths", "Language", "Wage", "Salary"),
-  dep.var.labels = c("Maths", "Language", "Wage", "Salary"),
+  column.labels = c("Maths", "Language", "Wage", "Salary", "Maths", "Language"),
+  dep.var.labels.include = FALSE,
+  dep.var.caption = "",
+  model.names = FALSE,
   covariate.labels = "$E_{is}$",
   title = "Estimates for Addis Ababa",
   label = "tab:aareg"
@@ -70,9 +69,8 @@ first_aa <- stargazer(
 )
 
 iv_aa <- stargazer(
-  # iv1, iv2,
   iv8aa, iv9aa, #iv5aa,
-  iv6aa, iv1aa,
+  iv6aa, iv1aa, iv5aa_yc, iv6aa_yc,
   keep = c("IMTI"),
   keep.stat = c("n"),
   covariate.labels = "IMTI"
@@ -86,9 +84,12 @@ tabIII <- star_panel(
   panel.names = c("Reduced Form", "2SLS")
 ) %>% star_insert_row(
   c(
-    " & Z-score & Z-score & Employed & Employed \\\\"
+    " & \\multicolumn{4}{c}{\\textbf{Older Chohort}} & \\multicolumn{2}{c}{\\textbf{Younger Cohort}} \\\\ ",
+    "\\cline{2-5} \\cline{6-7} ",
+    "\\\\[-1.8ex]",
+    " & Z-score & Z-score & Employed & Employed & Z-score & Z-score \\\\ "
   ),
-  insert.after = c(12)
+  insert.after = c(9, 9, 9, 10)
 ) %>% star_notes_tex(
   note.type = "threeparttable",
   note = "Standard errors are in parentheses. *** Significant at 1\\%, ** Significant at 5\\%, * Significant at 10\\%."
@@ -98,23 +99,35 @@ star_tex_write(tabIII,
                file = "Young-Lives---Collaboration/tables/tableIII.tex")
 
 
-## Reduced form for the AA sample ####
+## Reduced form & 2SLS for the younger cohort AA sample ####
 
-# rfaa <- stargazer(
-#   rf6aa, rf7aa, rf5aa, rf1aa,
+# yc_rf_aa <- stargazer(
+#   iv5aa_yc_rf, iv6aa_yc_rf,
 #   keep = c("E_is"),
-#   # type = "text",
-#   keep.stat = c("n","rsq"),
-#   # column.labels = c("Maths", "Language", "Highest", "Wage", "Wage"),
-#   dep.var.labels = c("Maths", "Language", "Wage", "Salary"),
+#   keep.stat = c("n"),
+#   dep.var.labels = c("Maths", "Language"),
 #   covariate.labels = "$E_{is}$",
-#   title = "Reduced Form Estimates for Addis Ababa Sample",
-#   label = "tab:aared"
+#   title = "Estimates for Addis Ababa: Younger Cohort",
+#   label = "tab:ycaa"
+#   # ,type = "text"
 # )
 # 
-# tabIV <- star_insert_row(rfaa,
+# yc_iv_aa <- stargazer(
+#   iv5aa_yc, iv6aa_yc,
+#   keep = c("IMTI"),
+#   keep.stat = c("n"),
+#   covariate.labels = "IMTI"
+#   # ,type = "text"
+# )
+# 
+# tabIV <- star_panel(
+#   yc_rf_aa, yc_iv_aa,
+#   same.summary.stats = TRUE, 
+#   panel.label.fontface = "bold",
+#   panel.names = c("Reduced Form", "2SLS")
+# ) %>% star_insert_row(
 #   c(
-#     " & Z-score & Z-score & Employed & Employed \\\\"
+#     " & Z-score & Z-score \\\\"
 #   ),
 #   insert.after = c(12)
 # ) %>% star_notes_tex(
@@ -124,6 +137,7 @@ star_tex_write(tabIII,
 # 
 # star_tex_write(tabIV, 
 #                file = "Young-Lives---Collaboration/tables/tableIV.tex")
+
 
 
 # Robustness Check (Oromia vs. Tigray) ####
