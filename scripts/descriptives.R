@@ -151,7 +151,7 @@ employ_gr <- non_aa_samp %>%
   )
   
 ggsave(
-  filename = "Young-Lives---Collaboration/figures/employ_gr.pdf",
+  filename = "output/figures/employ_gr.pdf",
   plot = employ_gr,
   device = cairo_pdf,
   width = 200,
@@ -350,7 +350,7 @@ print(
   include.rownames = FALSE, include.colnames = FALSE, 
   booktabs = TRUE, caption.placement = "top", 
   hline.after = c(-1, 0),
-  file = "Young-Lives---Collaboration/tables/tableI.tex" 
+  file = "output/tables/tableI.tex" 
 )
 
 

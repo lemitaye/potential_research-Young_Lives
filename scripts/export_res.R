@@ -48,7 +48,7 @@ tabII <- star_panel(
 )
 
 star_tex_write(tabII,
-  file = "Young-Lives---Collaboration/tables/tableII.tex"
+  file = "output/tables/tableII.tex"
 )
 
 
@@ -95,7 +95,7 @@ tabIII <- star_panel(
 )
 
 star_tex_write(tabIII, 
-               file = "Young-Lives---Collaboration/tables/tableIII.tex")
+               file = "output/tables/tableIII.tex")
 
 
 ## Reduced form & 2SLS for the younger cohort AA sample ####
@@ -139,7 +139,7 @@ tabIV <- star_panel(
 )
 
 star_tex_write(tabIV,
-               file = "Young-Lives---Collaboration/tables/tableIV.tex")
+               file = "output/tables/tableIV.tex")
 
 
 
@@ -168,7 +168,7 @@ tabV <- star_insert_row(ot_rob,
 )
 
 star_tex_write(tabV, 
-               file = "Young-Lives---Collaboration/tables/tableV.tex")
+               file = "output/tables/tableV.tex")
 
 
 # Regression for the non-Amhara sample (Non-AA Sample) ####
@@ -215,7 +215,7 @@ tabVI <- star_panel(
 )
 
 star_tex_write(tabVI,
-               file = "Young-Lives---Collaboration/tables/tableVI.tex"
+               file = "output/tables/tableVI.tex"
 )
 
 

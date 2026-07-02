@@ -201,3 +201,9 @@ Identification Strategy and Empirical Framework - May 13.docx
 ~$entification Strategy and Empirical Framework - May 13.docx
 *.docx
 Young-Lives---Collaboration/
+
+# --- Added during 2026 cleanup ---
+# macOS Finder metadata
+.DS_Store
+# Raw Young Lives inputs: large, read-only, redistributed separately (see README)
+raw_data/
